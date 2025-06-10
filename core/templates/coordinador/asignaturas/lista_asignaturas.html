@@ -1,0 +1,36 @@
+{% extends "layout/base_coordinador.html" %}
+{% block title %}Asignaturas{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-6">Lista de Asignaturas</h2>
+
+<a href="{% url 'registrar_asignatura' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mb-4 inline-block">
+  ➕ Registrar nueva asignatura
+</a>
+
+<table class="min-w-full bg-white shadow-md rounded">
+  <thead>
+    <tr class="bg-gray-200 text-gray-700">
+      <th class="py-2 px-4 text-left">Nombre</th>
+      <th class="py-2 px-4 text-left">Área</th>
+      <th class="py-2 px-4 text-left">Grado</th>
+      <th class="py-2 px-4 text-left">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for asignatura in asignaturas %}
+    <tr class="border-t">
+      <td class="py-2 px-4">{{ asignatura.nombre }}</td>
+      <td class="py-2 px-4">{{ asignatura.area.nombre }}</td>
+      <td class="py-2 px-4">{{ asignatura.grado.nombre }}</td>
+      <td class="py-2 px-4">
+        <a href="{% url 'editar_asignatura' asignatura.id %}" class="text-blue-600 hover:underline">✏️ Editar</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="4" class="py-4 px-4 text-center text-gray-500">No hay asignaturas registradas.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

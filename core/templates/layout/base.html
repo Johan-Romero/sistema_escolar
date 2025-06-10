@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Sistema Escolar{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome para los iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    /* Estilos personalizados para el sticky footer */
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* Asegura que el body ocupe al menos el 100% del alto de la ventana */
+    }
+    main {
+      flex-grow: 1; /* Permite que el contenido principal ocupe todo el espacio disponible */
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white shadow py-4">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <!-- Puedes mostrar u ocultar el logo y los enlaces según tu preferencia para esta página específica -->
+        <img src="{% static 'img/logo_escuela.jpeg' %}" alt="Logo" class="h-10 w-10 rounded-full object-cover hidden">
+        <h1 class="text-2xl font-semibold text-blue-700">Sistema Escolar</h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <!-- Icono de usuario si es una página de panel, o enlaces de inicio/registro si es una página pública -->
+        <!-- He mantenido los enlaces de tu plantilla original comentados por si los necesitas. -->
+        <a href="#" class="text-gray-600 hover:text-blue-600">
+          <i class="fas fa-user-circle text-3xl"></i>
+        </a>
+        <a href="{% url 'inicio' %}" class="text-sm text-gray-600 hover:text-blue-600">Inicio</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="max-w-4xl mx-auto mt-10 px-4">
+    <div class="bg-white p-14 rounded-lg shadow-md">
+      {% block content %}
+      <!-- Tu contenido original y simplificado aquí -->
+      <h1 class="text-3xl font-bold text-gray-800 mb-4">Bienvenido al Sistema Escolar</h1>
+      <p class="text-gray-600">Por favor inicia sesión o regístrate para continuar.</p>
+      {% endblock %}
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white text-center py-4 mt-12">
+    <p class="text-sm">© {% now "Y" %} Sistema Escolar. Todos los derechos reservados.</p>
+  </footer>
+
+</body>
+</html>

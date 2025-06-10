@@ -1,0 +1,18 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-800 mb-4">Bienvenido al Sistema Escolar</h1>
+<p class="text-gray-600 mb-6">Por favor inicia sesión o regístrate para continuar.</p>
+
+<!-- Contenedor para el botón de Iniciar Sesión -->
+<div class="mt-8 text-center"> {# Añade margen superior y centra el botón #}
+    <a href="{% url 'login' %}" 
+       class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition-colors duration-200 ease-in-out shadow-lg hover:shadow-xl">
+        Iniciar Sesión
+    </a>
+</div>
+
+{% endblock %}

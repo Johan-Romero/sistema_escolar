@@ -1,0 +1,46 @@
+{% extends "layout/base_coordinador.html" %}
+{% load static %}
+{% block title %}Áreas Académicas{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-xl shadow-md">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-blue-800 flex items-center gap-2">
+      📘 Áreas Académicas
+    </h1>
+    <a href="{% url 'nueva_area' %}"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition">
+      + Nueva Área
+    </a>
+  </div>
+
+  {% if areas %}
+  <table class="w-full table-auto bg-white rounded-lg shadow">
+    <thead class="bg-gray-100 text-left text-gray-700 text-sm uppercase tracking-wider">
+      <tr>
+        <th class="px-6 py-3">Nombre del Área</th>
+        <th class="px-6 py-3">Obligatoria</th>
+        <th class="px-6 py-3">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for area in areas %}
+      <tr class="border-b hover:bg-gray-50">
+        <td class="px-6 py-3">{{ area.nombre }}</td>
+        <td class="px-6 py-3">{{ area.obligatoria|yesno:"Sí,No" }}</td>
+        
+        <td class="px-6 py-3">
+          <a href="{% url 'editar_area' area.id %}" class="text-blue-600 hover:underline">Editar</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="text-center py-12 text-gray-500">
+    <p class="text-xl">😕 No hay áreas registradas aún.</p>
+    <p class="text-sm mt-2">Haz clic en <strong>"+ Nueva Área"</strong> para agregar una nueva.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

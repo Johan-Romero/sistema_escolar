@@ -1,0 +1,9 @@
+{% extends "layout/base_acudiente.html" %}
+
+{% block title %}Panel del Acudiente{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<h2>Bienvenido, Acudiente</h2>
+<p>Desde aquí podras monitoriar el proreso de tu hijo</p>
+{% endblock %}

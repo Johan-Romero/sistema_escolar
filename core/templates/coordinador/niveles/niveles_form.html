@@ -1,0 +1,26 @@
+{% extends 'layout/base_coordinador.html' %}
+{% block content %}
+<div class="bg-white p-6 rounded-xl shadow-md w-full max-w-xl mx-auto">
+    <h2 class="text-2xl font-bold text-blue-800 mb-6 flex items-center gap-2">📚 Nivel Educativo</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+
+        <div class="mb-4 ">
+            <label class="block text-gray-700 mb-1 font-medium ">Nombre del Área:</label>
+            {{ form.nombre }}
+        </div>
+
+        <button type="submit"
+            class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md font-semibold transition">💾
+            Guardar</button>
+        <a href="{% url 'lista_niveles' %}" class="bg-red-100 text-red-600 px-4 py-2 rounded-md hover:bg-red-200">❌
+            Cancelar</a>
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            {{ form.errors }}
+        </div>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

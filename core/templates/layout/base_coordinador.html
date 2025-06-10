@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Sistema Escolar{% endblock %}</title>
+  <link href="{% static 'css/tailwind.css' %}" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+<body class="font-sans antialiased bg-gray-100">
+
+  <div class="flex min-h-screen">
+
+    <!-- Barra lateral -->
+    <aside class="w-64 bg-slate-800 text-white shadow-lg">
+      <div class="p-6">
+        <div class="flex items-center gap-2 mb-6">
+          <img src="{% static 'img/icono_docente.jpg' %}" class="h-10 w-10 rounded-full" alt="Icono coordinador">
+          <span class="text-lg font-semibold">Coordinador</span>
+        </div>
+        <nav class="space-y-2">
+          <a href="{% url 'panel_coordinador' %}" class="flex items-center py-2.5 px-4 rounded-md hover:bg-slate-700 hover:text-blue-400">
+            <i class="fa-solid fa-house w-6 text-center"></i><span class="ml-3">Inicio</span>
+          </a>
+          <a href="{% url 'lista_niveles' %}" class="flex items-center py-2.5 px-4 hover:bg-slate-700 hover:text-blue-400">
+            <i class="fa-solid fa-layer-group w-6 text-center"></i><span class="ml-3">Niveles Educativos</span>
+          </a>
+          <a href="{% url 'lista_grados' %}" class="flex items-center py-2.5 px-4 hover:bg-slate-700 hover:text-blue-400">
+            <i class="fa-solid fa-graduation-cap w-6 text-center"></i><span class="ml-3">Grados</span>
+          </a>
+          <a href="{% url 'lista_areas' %}" class="flex items-center py-2.5 px-4 hover:bg-slate-700 hover:text-blue-400">
+            <i class="fa-solid fa-shapes w-6 text-center"></i><span class="ml-3">Áreas</span>
+          </a>
+          <a href="{% url 'lista_asignaturas' %}" class="flex items-center py-2.5 px-4 hover:bg-slate-700 hover:text-blue-400">
+            <i class="fa-solid fa-book w-6 text-center"></i><span class="ml-3">Asignaturas</span>
+          </a>
+          <a href="#" class="flex items-center py-2.5 px-4 hover:bg-slate-700 hover:text-blue-400">
+            <i class="fa-solid fa-lightbulb w-6 text-center"></i><span class="ml-3">Temas</span>
+          </a>
+          <a href="#" class="flex items-center py-2.5 px-4 hover:bg-slate-700 hover:text-blue-400">
+            <i class="fa-solid fa-trophy w-6 text-center"></i><span class="ml-3">Logros</span>
+          </a>
+          <a href="#" class="flex items-center py-2.5 px-4 hover:bg-slate-700 hover:text-blue-400">
+            <i class="fa-solid fa-chalkboard w-6 text-center"></i><span class="ml-3">Aulas</span>
+          </a>
+          <a href="#" class="flex items-center py-2.5 px-4 hover:bg-slate-700 hover:text-blue-400">
+            <i class="fa-solid fa-users w-6 text-center"></i><span class="ml-3">Grupos</span>
+          </a>
+          <a href="#" class="flex items-center py-2.5 px-4 hover:bg-slate-700 hover:text-blue-400">
+            <i class="fa-solid fa-chalkboard-user w-6 text-center"></i><span class="ml-3">Asignación Docente</span>
+          </a>
+          <a href="#" class="flex items-center py-2.5 px-4 hover:bg-slate-700 hover:text-blue-400">
+            <i class="fa-solid fa-user-check w-6 text-center"></i><span class="ml-3">Validar Usuarios</span>
+          </a>
+          <a href="{% url 'logout' %}" class="flex items-center py-2.5 px-4 hover:bg-red-600 hover:text-white mt-6 border-t border-slate-700 pt-4">
+            <i class="fa-solid fa-right-from-bracket w-6 text-center"></i><span class="ml-3">Cerrar Sesión</span>
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Contenedor principal -->
+    <div class="flex-1 flex flex-col">
+
+      <!-- Navbar con ícono usuario -->
+      <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="px-6 py-4 flex justify-end items-center">
+          <div class="relative inline-block text-left">
+            <button id="userMenuBtn" class="focus:outline-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9.969 9.969 0 0012 20a9.969 9.969 0 006.879-2.196M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </button>
+
+            <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+              <div class="py-1 text-sm text-gray-700">
+                <div class="px-4 py-2 border-b font-semibold">
+                  {{ request.user.correo }}
+                </div>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100">👤 Ver perfil</a>
+                <a href="{% url 'logout' %}" class="block px-4 py-2 hover:bg-gray-100">🔓 Cerrar sesión</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Contenido dinámico -->
+      <main class="p-6 md:p-10 overflow-y-auto bg-gray-100 min-h-screen">
+        {% block content %}
+        {% endblock %}
+      </main>
+
+    </div>
+  </div>
+
+  <script>
+    // Dropdown menú
+    const menuBtn = document.getElementById("userMenuBtn");
+    const dropdown = document.getElementById("userDropdown");
+
+    menuBtn.addEventListener("click", () => {
+      dropdown.classList.toggle("hidden");
+    });
+
+    window.addEventListener("click", function (e) {
+      if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.add("hidden");
+      }
+    });
+  </script>
+
+</body>
+</html>
