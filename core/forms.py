@@ -1,5 +1,5 @@
 from django import forms
-from .models import Usuario, Rol, NivelEducativo, Grado, Persona, Ciudad, TipoDocumento, Departamento, Area, Asignatura
+from .models import Usuario, Rol, NivelEducativo, Grado, Persona, Ciudad, TipoDocumento, Departamento, Area, Asignatura, Tema, Logro, Aula, Grupo, AsignacionDocente
 from django.contrib.auth.hashers import make_password
 
 class RegistroUsuarioForm(forms.ModelForm):
@@ -80,4 +80,57 @@ class AsignaturaForm(forms.ModelForm):
             'nombre': forms.TextInput(attrs={'class': 'form-input'}),
             'grado': forms.Select(attrs={'class': 'form-select'}),
             'area': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+class TemaForm(forms.ModelForm):
+    class Meta:
+        model = Tema
+        fields = ['asignatura', 'nombre']
+        widgets = {
+            'asignatura': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded'}),
+            'nombre': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border rounded'}),
+        }
+
+
+class LogroForm(forms.ModelForm):
+    class Meta:
+        model = Logro
+        fields = ['asignatura', 'descripcion']
+        widgets = {
+            'asignatura': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded'}),
+            'descripcion': forms.Textarea(attrs={'rows': 4, 'class': 'w-full px-4 py-2 border rounded'}),
+        }
+
+
+class AulaForm(forms.ModelForm):
+    class Meta:
+        model = Aula
+        fields = ['nombre', 'capacidad', 'estado']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border rounded'}),
+            'capacidad': forms.NumberInput(attrs={'class': 'w-full px-4 py-2 border rounded'}),
+            'estado': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded'}),
+        }
+
+
+class GrupoForm(forms.ModelForm):
+    class Meta:
+        model = Grupo
+        fields = ['grado', 'nombre', 'aula']
+        widgets = {
+            'grado': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded'}),
+            'nombre': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border rounded'}),
+            'aula': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded'}),
+        }
+
+
+
+class AsignacionDocenteForm(forms.ModelForm):
+    class Meta:
+        model = AsignacionDocente
+        fields = ['docente', 'grupo', 'asignatura']
+        widgets = {
+            'docente': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded'}),
+            'grupo': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded'}),
+            'asignatura': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded'}),
         }

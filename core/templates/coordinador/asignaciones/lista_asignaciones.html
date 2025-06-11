@@ -1,0 +1,33 @@
+{% extends "layout/base_coordinador.html" %}
+{% block title %}Asignación de Docentes{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">👨‍🏫 Asignaciones Docentes</h2>
+
+<a href="{% url 'nueva_asignacion' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mb-4 inline-block">
+  + Nueva Asignación
+</a>
+
+<table class="min-w-full bg-white border rounded">
+  <thead class="bg-gray-200">
+    <tr>
+      <th class="py-2 px-4 text-left">Docente</th>
+      <th class="py-2 px-4 text-left">Grupo</th>
+      <th class="py-2 px-4 text-left">Asignatura</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for asignacion in asignaciones %}
+      <tr class="border-t">
+        <td class="py-2 px-4">{{ asignacion.docente.persona }}</td>
+        <td class="py-2 px-4">{{ asignacion.grupo }}</td>
+        <td class="py-2 px-4">{{ asignacion.asignatura }}</td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="3" class="text-center py-4">No hay asignaciones registradas.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

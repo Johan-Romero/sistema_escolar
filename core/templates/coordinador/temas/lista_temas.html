@@ -1,0 +1,31 @@
+{% extends "layout/base_coordinador.html" %}
+{% block title %}Lista de Temas{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">📘 Temas por Asignatura</h2>
+
+<a href="{% url 'nuevo_tema' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mb-4 inline-block">
+  + Nuevo Tema
+</a>
+
+<table class="min-w-full bg-white border rounded">
+  <thead class="bg-gray-200">
+    <tr>
+      <th class="py-2 px-4 text-left">Nombre</th>
+      <th class="py-2 px-4 text-left">Asignatura</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for tema in temas %}
+      <tr class="border-t">
+        <td class="py-2 px-4">{{ tema.nombre }}</td>
+        <td class="py-2 px-4">{{ tema.asignatura.nombre }}</td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="2" class="text-center py-4">No hay temas registrados.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

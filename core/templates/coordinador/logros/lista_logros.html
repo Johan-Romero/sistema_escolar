@@ -1,0 +1,31 @@
+{% extends "layout/base_coordinador.html" %}
+{% block title %}Lista de Logros{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">🏆 Logros Académicos</h2>
+
+<a href="{% url 'nuevo_logro' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mb-4 inline-block">
+  + Nuevo Logro
+</a>
+
+<table class="min-w-full bg-white border rounded">
+  <thead class="bg-gray-200">
+    <tr>
+      <th class="py-2 px-4 text-left">Descripción</th>
+      <th class="py-2 px-4 text-left">Asignatura</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for logro in logros %}
+      <tr class="border-t">
+        <td class="py-2 px-4">{{ logro.descripcion }}</td>
+        <td class="py-2 px-4">{{ logro.asignatura.nombre }}</td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="2" class="text-center py-4">No hay logros registrados.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

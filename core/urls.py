@@ -1,6 +1,8 @@
 from django.urls import path
+
 from .views import registrar_usuario_panel, inicio, login_usuario, logout_view
-from .views import panel_coordinador, panel_docente, panel_estudiante, panel_acudiente, lista_areas, nueva_area, editar_area, lista_niveles, nuevo_nivel, editar_nivel, eliminar_nivel, lista_grados, registrar_grado, editar_grado, lista_asignaturas, registrar_asignatura, editar_asignatura
+
+from .views import panel_coordinador, panel_docente, panel_estudiante, panel_acudiente, lista_areas, nueva_area, editar_area, lista_niveles, nuevo_nivel, editar_nivel, eliminar_nivel, lista_grados, registrar_grado, editar_grado, lista_asignaturas, registrar_asignatura, editar_asignatura, lista_temas, nuevo_tema, lista_logros, nuevo_logro, lista_aulas, nueva_aula, lista_grupos, nuevo_grupo, lista_asignaciones, nueva_asignacion, validar_usuarios, activar_usuario
 
 
 urlpatterns = [
@@ -46,7 +48,29 @@ urlpatterns = [
 
     path('coordinador/asignaturas/<int:asignatura_id>/editar/',editar_asignatura, name='editar_asignatura'),
 
+    path('coordinador/temas/', lista_temas, name='lista_temas'),
 
+    path('coordinador/temas/nuevo/', nuevo_tema, name='nuevo_tema'),
+
+    path('coordinador/logros/', lista_logros, name='lista_logros'),
+
+    path('coordinador/logros/nuevo/', nuevo_logro, name='nuevo_logro'),
+
+    path('coordinador/aulas/', lista_aulas, name='lista_aulas'),
+
+    path('coordinador/aulas/nueva/', nueva_aula, name='nueva_aula'),
+
+    path('coordinador/grupos/', lista_grupos, name='lista_grupos'),
+
+    path('coordinador/grupos/nuevo/', nuevo_grupo, name='nuevo_grupo'),
+
+    path('coordinador/asignaciones/', lista_asignaciones, name='lista_asignaciones'),
+    
+    path('coordinador/asignaciones/nueva/', nueva_asignacion, name='nueva_asignacion'),
+
+    path('coordinador/usuarios/pendientes/', validar_usuarios, name='validar_usuarios'),
+
+    path('coordinador/usuarios/activar/<int:usuario_id>/', activar_usuario, name='activar_usuario'),
 ]
 
 
