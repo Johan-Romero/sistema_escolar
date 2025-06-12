@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegistroUsuarioForm
 from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm
-from .models import Usuario, Area, NivelEducativo, Grado, Asignatura
+from .models import Usuario, Area, NivelEducativo, Grado, Asignatura, Tema, Logro, Aula, Grupo, AsignacionDocente
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from .forms import RegistroUsuarioForm, PersonaForm
-from .forms import AreaForm, NivelEducativoForm, GradoForm, AsignaturaForm
+from .forms import AreaForm, NivelEducativoForm, GradoForm, AsignaturaForm, TemaForm, LogroForm, AulaForm, GrupoForm, AsignacionDocenteForm
 from .decoradores import rol_requerido
 
 
@@ -211,6 +211,96 @@ def editar_asignatura(request, asignatura_id):
         form = AsignaturaForm(instance=asignatura)
     return render(request, 'coordinador/asignaturas/form_asignatura.html', {'form': form, 'modo': 'Editar'})
 
+#Tema
+
+@rol_requerido('Coordinador')
+def lista_temas(request):
+    temas = Tema.objects.select_related('asignatura').all()
+    return render(request, 'coordinador/temas/lista_temas.html', {'temas': temas})
+
+@rol_requerido('Coordinador')
+def nuevo_tema(request):
+    if request.method == 'POST':
+        form = TemaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_temas')
+    else:
+        form = TemaForm()
+    return render(request, 'coordinador/temas/nuevo_tema.html', {'form': form})
+
+
+#Logros
+
+@rol_requerido('Coordinador')
+def lista_logros(request):
+    logros = Logro.objects.select_related('asignatura').all()
+    return render(request, 'coordinador/logros/lista_logros.html', {'logros': logros})
+
+@rol_requerido('Coordinador')
+def nuevo_logro(request):
+    if request.method == 'POST':
+        form = LogroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_logros')
+    else:
+        form = LogroForm()
+    return render(request, 'coordinador/logros/nuevo_logro.html', {'form': form})
+
+#Aulas
+
+@rol_requerido('Coordinador')
+def lista_aulas(request):
+    aulas = Aula.objects.all()
+    return render(request, 'coordinador/aulas/lista_aulas.html', {'aulas': aulas})
+
+@rol_requerido('Coordinador')
+def nueva_aula(request):
+    if request.method == 'POST':
+        form = AulaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_aulas')
+    else:
+        form = AulaForm()
+    return render(request, 'coordinador/aulas/nueva_aula.html', {'form': form})
+
+#Grupo
+
+@rol_requerido('Coordinador')
+def lista_grupos(request):
+    grupos = Grupo.objects.select_related('grado', 'aula')
+    return render(request, 'coordinador/grupos/lista_grupos.html', {'grupos': grupos})
+
+@rol_requerido('Coordinador')
+def nuevo_grupo(request):
+    if request.method == 'POST':
+        form = GrupoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_grupos')
+    else:
+        form = GrupoForm()
+    return render(request, 'coordinador/grupos/nuevo_grupo.html', {'form': form})
+
+#Asignacion de docente
+
+@rol_requerido('Coordinador')
+def lista_asignaciones(request):
+    asignaciones = AsignacionDocente.objects.select_related('docente', 'grupo', 'asignatura')
+    return render(request, 'coordinador/asignaciones/lista_asignaciones.html', {'asignaciones': asignaciones})
+
+@rol_requerido('Coordinador')
+def nueva_asignacion(request):
+    if request.method == 'POST':
+        form = AsignacionDocenteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_asignaciones')
+    else:
+        form = AsignacionDocenteForm()
+    return render(request, 'coordinador/asignaciones/nueva_asignacion.html', {'form': form})
 
 
 
@@ -289,6 +379,27 @@ def editar_area(request, area_id):
         form = AreaForm(instance=area)
     return render(request, 'coordinador/areas/form_area.html', {'form': form, 'modo': 'Editar'})
     
+#Validar usuario
 
+@rol_requerido('Coordinador')
+def panel_coordinador(request):
+    usuarios_pendientes = Usuario.objects.filter(is_active=False)
+    return render(request, 'coordinador/panel_coordinador.html', {
+        'usuarios_pendientes': usuarios_pendientes,
+        'cantidad_pendientes': usuarios_pendientes.count()
+    })
 
+@rol_requerido('Coordinador')
+def validar_usuarios(request):
+    usuarios_pendientes = Usuario.objects.filter(is_active=False)
+    return render(request, 'coordinador/validar_usuarios.html', {
+        'usuarios': usuarios_pendientes
+    })
+
+@rol_requerido('Coordinador')
+def activar_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuario, pk=usuario_id)
+    usuario.is_active = True
+    usuario.save()
+    return redirect('validar_usuarios')
 

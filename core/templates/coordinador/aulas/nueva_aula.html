@@ -1,0 +1,26 @@
+{% extends "layout/base_coordinador.html" %}
+{% block title %}Nueva Aula{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-semibold mb-6">➕ Registrar Nueva Aula</h2>
+
+<form method="post" class="bg-white p-6 rounded shadow-md">
+  {% csrf_token %}
+  <div class="mb-4">
+    <label class="block text-gray-700 font-medium">Nombre del Aula</label>
+    {{ form.nombre }}
+  </div>
+  <div class="mb-4">
+    <label class="block text-gray-700 font-medium">Capacidad</label>
+    {{ form.capacidad }}
+  </div>
+  <div class="mb-4">
+    <label class="block text-gray-700 font-medium">Estado</label>
+    {{ form.estado }}
+  </div>
+  <div class="flex gap-3">
+    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Guardar</button>
+    <a href="{% url 'lista_aulas' %}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

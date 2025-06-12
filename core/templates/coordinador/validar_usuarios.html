@@ -1,0 +1,31 @@
+{% extends "layout/base_coordinador.html" %}
+{% block title %}Validar Usuarios{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-semibold mb-6">🧑‍💻 Usuarios Pendientes de Activación</h2>
+
+{% if usuarios %}
+<table class="min-w-full bg-white border rounded">
+  <thead class="bg-gray-100">
+    <tr>
+      <th class="py-2 px-4 text-left">Correo</th>
+      <th class="py-2 px-4 text-left">Rol</th>
+      <th class="py-2 px-4 text-left">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for usuario in usuarios %}
+    <tr class="border-t">
+      <td class="py-2 px-4">{{ usuario.correo }}</td>
+      <td class="py-2 px-4">{{ usuario.rol.nombre }}</td>
+      <td class="py-2 px-4">
+        <a href="{% url 'activar_usuario' usuario.id %}" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition">Activar</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-gray-600">No hay usuarios pendientes por activar.</p>
+{% endif %}
+{% endblock %}

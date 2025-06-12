@@ -1,0 +1,33 @@
+{% extends "layout/base_coordinador.html" %}
+{% block title %}Lista de Grupos{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">👥 Grupos Académicos</h2>
+
+<a href="{% url 'nuevo_grupo' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mb-4 inline-block">
+  + Nuevo Grupo
+</a>
+
+<table class="min-w-full bg-white border rounded">
+  <thead class="bg-gray-200">
+    <tr>
+      <th class="py-2 px-4 text-left">Grado</th>
+      <th class="py-2 px-4 text-left">Nombre</th>
+      <th class="py-2 px-4 text-left">Aula</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for grupo in grupos %}
+      <tr class="border-t">
+        <td class="py-2 px-4">{{ grupo.grado }}</td>
+        <td class="py-2 px-4">{{ grupo.nombre }}</td>
+        <td class="py-2 px-4">{{ grupo.aula }}</td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="3" class="text-center py-4">No hay grupos registrados.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

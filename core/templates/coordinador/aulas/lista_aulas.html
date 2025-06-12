@@ -1,0 +1,33 @@
+{% extends "layout/base_coordinador.html" %}
+{% block title %}Lista de Aulas{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">🏫 Aulas Académicas</h2>
+
+<a href="{% url 'nueva_aula' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mb-4 inline-block">
+  + Nueva Aula
+</a>
+
+<table class="min-w-full bg-white border rounded">
+  <thead class="bg-gray-200">
+    <tr>
+      <th class="py-2 px-4 text-left">Nombre</th>
+      <th class="py-2 px-4 text-left">Capacidad</th>
+      <th class="py-2 px-4 text-left">Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for aula in aulas %}
+      <tr class="border-t">
+        <td class="py-2 px-4">{{ aula.nombre }}</td>
+        <td class="py-2 px-4">{{ aula.capacidad }}</td>
+        <td class="py-2 px-4">{{ aula.estado }}</td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="3" class="text-center py-4">No hay aulas registradas.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
