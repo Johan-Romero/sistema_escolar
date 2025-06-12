@@ -1,31 +1,44 @@
 {% extends "layout/base_coordinador.html" %}
-{% block title %}Lista de Temas{% endblock %}
+{% block title %}Temas por Asignatura{% endblock %}
 
 {% block content %}
-<h2 class="text-2xl font-semibold mb-4">📘 Temas por Asignatura</h2>
+<div class="bg-white p-6 rounded-xl shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-blue-800 flex items-center gap-2">📘 Temas por Asignatura</h2>
+        <a href="{% url 'nuevo_tema' %}"
+           class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition">
+           + Nuevo Tema
+        </a>
+    </div>
 
-<a href="{% url 'nuevo_tema' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mb-4 inline-block">
-  + Nuevo Tema
-</a>
-
-<table class="min-w-full bg-white border rounded">
-  <thead class="bg-gray-200">
-    <tr>
-      <th class="py-2 px-4 text-left">Nombre</th>
-      <th class="py-2 px-4 text-left">Asignatura</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for tema in temas %}
-      <tr class="border-t">
-        <td class="py-2 px-4">{{ tema.nombre }}</td>
-        <td class="py-2 px-4">{{ tema.asignatura.nombre }}</td>
-      </tr>
-    {% empty %}
-      <tr>
-        <td colspan="2" class="text-center py-4">No hay temas registrados.</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    {% if temas %}
+    <table class="w-full table-auto bg-white rounded-lg shadow">
+        <thead class="bg-gray-100 text-left text-gray-700 text-sm uppercase tracking-wider">
+            <tr>
+                <th class="px-6 py-3">Nombre</th>
+                <th class="px-6 py-3">Asignatura</th>
+                <th class="px-6 py-3">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tema in temas %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="px-6 py-3">{{ tema.nombre }}</td>
+                <td class="px-6 py-3">{{ tema.asignatura.nombre }}</td>
+                <td class="px-6 py-3">
+                    <a href="#" class="text-blue-600 hover:underline">Editar |</a>
+                    <a href="#" class="text-red-600 hover:underline"
+                       onclick="return confirm('¿Estás seguro de eliminar este tema?')">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center py-12 text-gray-500">
+        <p class="text-xl">😕 No hay temas registrados aún.</p>
+        <p class="text-sm mt-2">Haz clic en <strong>+ Nuevo Tema</strong> para agregar uno.</p>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

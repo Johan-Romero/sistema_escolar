@@ -8,6 +8,7 @@ from django.http import HttpResponseForbidden
 from .forms import RegistroUsuarioForm, PersonaForm
 from .forms import AreaForm, NivelEducativoForm, GradoForm, AsignaturaForm, TemaForm, LogroForm, AulaForm, GrupoForm, AsignacionDocenteForm
 from .decoradores import rol_requerido
+from django.contrib import messages
 
 
 
@@ -177,6 +178,18 @@ def editar_grado(request, grado_id):
     else:
         form = GradoForm(instance=grado)
     return render(request, 'coordinador/grados/form_grado.html', {'form': form, 'modo': 'Editar'})
+
+def eliminar_grado(request, grado_id):
+    grado = get_object_or_404(Grado, id=grado_id)
+    
+    if request.method == 'POST':
+        grado.delete()
+        messages.success(request, 'Grado eliminado correctamente.')
+        return redirect('lista_grados')
+
+    # Si alguien accede directamente por GET sin confirmar, redirige o muestra una alerta
+    messages.warning(request, 'Para eliminar un grado debes confirmar la acción.')
+    return redirect('lista_grados')
 
 #Asignatura
 

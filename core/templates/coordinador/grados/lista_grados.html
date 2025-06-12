@@ -1,34 +1,43 @@
-{% extends "layout/base_coordinador.html" %}
-{% block title %}Grados{% endblock %}
+
+{% extends 'layout/base_coordinador.html' %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-6">Lista de Grados</h2>
+<div class="bg-white p-6 rounded-xl shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-blue-800 flex items-center gap-2">🏫 Grados Académicos</h2>
+        <a href="{% url 'registrar_grado' %}"
+           class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition">+ Nuevo Grado</a>
+    </div>
+    {% if grados %}
+    <table class="w-full table-auto bg-white rounded-lg shadow">
+        <thead class="bg-gray-100 text-left text-gray-700 text-sm uppercase tracking-wider">
+            <tr>
+                <th class="px-6 py-3">Nombre</th>
+                <th class="px-6 py-3">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grado in grados %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="px-6 py-3">{{ grado.nombre }}</td>
+                <td class="px-6 py-3">
+                    <a href="{% url 'editar_grado' grado.id %}" class="text-blue-600 hover:underline">Editar |</a>
+                    <form action="{% url 'eliminar_grado' grado.id %}" method="post" style="display:inline;">
+                      {% csrf_token %}
+                      <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este grado?');">
+                        Eliminar
+                      </button>
+                    </form>
 
-<a href="{% url 'registrar_grado' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mb-4 inline-block">
-  ➕ Registrar nuevo grado
-</a>
-
-<table class="min-w-full bg-white shadow-md rounded">
-  <thead>
-    <tr class="bg-gray-200 text-gray-700">
-      <th class="py-2 px-4 text-left">Nivel Educativo</th>
-      <th class="py-2 px-4 text-left">Grado</th>
-      <th class="py-2 px-4 text-left">Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for grado in grados %}
-    <tr class="border-t">
-      <td class="py-2 px-4">{{ grado.nivel.nombre }}</td>
-      <td class="py-2 px-4">{{ grado.nombre }}</td>
-      <td class="py-2 px-4">
-        <a href="{% url 'editar_grado' grado.id %}" class="text-blue-600 hover:underline">✏️ Editar</a>
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="3" class="py-4 px-4 text-center text-gray-500">No hay grados registrados.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center py-12 text-gray-500">
+        <p class="text-xl">😕 No hay Grados registrados aún.</p>
+        <p class="text-sm mt-2">Haz clic en <strong>"+ Nuevo Grado"</strong> para agregar uno nuevo.</p>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

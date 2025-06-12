@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import registrar_usuario_panel, inicio, login_usuario, logout_view
 
-from .views import panel_coordinador, panel_docente, panel_estudiante, panel_acudiente, lista_areas, nueva_area, editar_area, lista_niveles, nuevo_nivel, editar_nivel, eliminar_nivel, lista_grados, registrar_grado, editar_grado, lista_asignaturas, registrar_asignatura, editar_asignatura, lista_temas, nuevo_tema, lista_logros, nuevo_logro, lista_aulas, nueva_aula, lista_grupos, nuevo_grupo, lista_asignaciones, nueva_asignacion, validar_usuarios, activar_usuario, lista_usuarios, editar_usuario, registrar_persona, registrar_usuario
+from .views import panel_coordinador, panel_docente, panel_estudiante, panel_acudiente, lista_areas, nueva_area, editar_area, lista_niveles, nuevo_nivel, editar_nivel, eliminar_nivel, lista_grados, registrar_grado, editar_grado, lista_asignaturas, registrar_asignatura, editar_asignatura, lista_temas, nuevo_tema, lista_logros, nuevo_logro, lista_aulas, nueva_aula, lista_grupos, nuevo_grupo, lista_asignaciones, nueva_asignacion, validar_usuarios, activar_usuario, lista_usuarios, editar_usuario, registrar_persona, registrar_usuario, eliminar_grado
 
 
 urlpatterns = [
@@ -39,6 +39,8 @@ urlpatterns = [
     path('coordinador/grados/nuevo/', registrar_grado, name='registrar_grado'),
 
     path('coordinador/grados/<int:grado_id>/editar/', editar_grado, name='editar_grado'),
+
+    path('coordinador/grados/<int:grado_id>/eliminar/', eliminar_grado, name='eliminar_grado'),
 
     path('coordinador/asignaturas/', lista_asignaturas, name='lista_asignaturas'),
 
@@ -79,7 +81,6 @@ urlpatterns = [
     path('coordinador/registrar_usuario/', registrar_usuario, name='registrar_usuario'),
 
     path('coordinador/personas/nuevo/', registrar_persona, name='registrar_persona'),
-    
 ]
 
 
