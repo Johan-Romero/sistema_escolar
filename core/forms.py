@@ -3,22 +3,14 @@ from .models import Usuario, Rol, NivelEducativo, Grado, Persona, Ciudad, TipoDo
 from django.contrib.auth.hashers import make_password
 
 class RegistroUsuarioForm(forms.ModelForm):
-    password = forms.CharField(
-        label="Contraseña",
-        widget=forms.PasswordInput,
-        help_text="""<ul>
-                        <li>Debe tener al menos 8 caracteres.</li>
-                        <li>Incluir mayúsculas y minúsculas.</li>
-                        <li>Contener al menos un número.</li>
-                        <li>Debe tener un símbolo especial: #, $, %, !</li>
-                    </ul>"""  # Asegúrate de cerrar correctamente la cadena
-    )
-    
-
     class Meta:
         model = Usuario
-        fields = ['correo', 'password', 'rol', 'persona']
-
+        fields = ['correo', 'rol', 'persona', 'is_active']
+        widgets = {
+            'persona': forms.Select(attrs={'class': 'form-select'}),
+            'rol': forms.Select(attrs={'class': 'form-select'}),
+        }
+    
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
@@ -41,11 +33,14 @@ class PersonaForm(forms.ModelForm):
         model = Persona
         fields = [
             'primer_nombre', 'segundo_nombre', 'primer_apellido', 'segundo_apellido',
-            'tipo_documento', 'numero_documento', 'direccion_linea1', 'direccion_linea2',
-            'ciudad'
+            'tipo_documento', 'numero_documento', 'fecha_nacimiento', 'sexo',
+            'telefono', 'correo_personal',
+            'direccion_linea1', 'direccion_linea2', 'ciudad'
         ]
         widgets = {
-            'direccion_linea2': forms.TextInput(attrs={'placeholder': 'Opcional'})
+            'direccion_linea2': forms.TextInput(attrs={'placeholder': 'Opcional'}),
+            'fecha_nacimiento': forms.DateInput(attrs={'type': 'date'}),
+            'sexo': forms.Select(choices=Persona.SEXO_CHOICES),
         }
 
 class AreaForm(forms.ModelForm):

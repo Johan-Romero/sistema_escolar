@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import registrar_usuario_panel, inicio, login_usuario, logout_view
 
-from .views import panel_coordinador, panel_docente, panel_estudiante, panel_acudiente, lista_areas, nueva_area, editar_area, lista_niveles, nuevo_nivel, editar_nivel, eliminar_nivel, lista_grados, registrar_grado, editar_grado, lista_asignaturas, registrar_asignatura, editar_asignatura, lista_temas, nuevo_tema, lista_logros, nuevo_logro, lista_aulas, nueva_aula, lista_grupos, nuevo_grupo, lista_asignaciones, nueva_asignacion, validar_usuarios, activar_usuario
+from .views import panel_coordinador, panel_docente, panel_estudiante, panel_acudiente, lista_areas, nueva_area, editar_area, lista_niveles, nuevo_nivel, editar_nivel, eliminar_nivel, lista_grados, registrar_grado, editar_grado, lista_asignaturas, registrar_asignatura, editar_asignatura, lista_temas, nuevo_tema, lista_logros, nuevo_logro, lista_aulas, nueva_aula, lista_grupos, nuevo_grupo, lista_asignaciones, nueva_asignacion, validar_usuarios, activar_usuario, lista_usuarios, editar_usuario, registrar_persona, registrar_usuario
 
 
 urlpatterns = [
@@ -17,8 +17,6 @@ urlpatterns = [
     path('estudiante/', panel_estudiante, name='panel_estudiante'),
 
     path('acudiente/', panel_acudiente, name='panel_acudiente'),
-
-    path('coordinador/registrar_usuario/', registrar_usuario_panel, name='registrar_usuario_panel'),
 
     path('coordinador/areas/', lista_areas, name='lista_areas'),
 
@@ -71,6 +69,17 @@ urlpatterns = [
     path('coordinador/usuarios/pendientes/', validar_usuarios, name='validar_usuarios'),
 
     path('coordinador/usuarios/activar/<int:usuario_id>/', activar_usuario, name='activar_usuario'),
+
+    path('coordinador/usuarios/', lista_usuarios, name='lista_usuarios'),
+
+    path('coordinador/usuarios/editar/<int:nivel_id>/', editar_usuario, name='editar_usuarios'),
+    
+    path('coordinador/personas/nueva/', registrar_persona, name='registrar_persona'),
+
+    path('coordinador/registrar_usuario/', registrar_usuario, name='registrar_usuario'),
+
+    path('coordinador/personas/nuevo/', registrar_persona, name='registrar_persona'),
+    
 ]
 
 
