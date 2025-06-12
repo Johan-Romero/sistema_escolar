@@ -1,6 +1,7 @@
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.core.validators import RegexValidator
 
 # Tablas Paramétricas
 class Rol(models.Model):
@@ -51,12 +52,27 @@ class Ciudad(models.Model):
 
 # Persona base
 class Persona(models.Model):
+    SEXO_CHOICES = [
+        ('M', 'Masculino'),
+        ('F', 'Femenino'),
+        ('O', 'Otro'),
+    ]
+
     primer_nombre = models.CharField(max_length=50)
     segundo_nombre = models.CharField(max_length=50, blank=True, null=True)
     primer_apellido = models.CharField(max_length=50)
     segundo_apellido = models.CharField(max_length=50, blank=True, null=True)
     tipo_documento = models.ForeignKey(TipoDocumento, on_delete=models.PROTECT)
     numero_documento = models.CharField(max_length=20, unique=True)
+    fecha_nacimiento = models.DateField(null=True, blank=True)
+    sexo = models.CharField(max_length=1, choices=SEXO_CHOICES, null=True, blank=True)
+    telefono = models.CharField(
+        max_length=15,
+        validators=[RegexValidator(r'^\+?1?\d{9,15}$')],
+        blank=True,
+        null=True
+    )
+    correo_personal = models.EmailField(blank=True, null=True)
     direccion_linea1 = models.CharField(max_length=100)
     direccion_linea2 = models.CharField(max_length=100, blank=True, null=True)
     ciudad = models.ForeignKey(Ciudad, on_delete=models.PROTECT)

@@ -302,6 +302,47 @@ def nueva_asignacion(request):
         form = AsignacionDocenteForm()
     return render(request, 'coordinador/asignaciones/nueva_asignacion.html', {'form': form})
 
+#Usuarios
+
+@rol_requerido('Coordinador')
+def registrar_persona(request):
+    if request.method == 'POST':
+        form = PersonaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Persona registrada correctamente.')
+            return redirect('listar_personas')
+    else:
+        form = PersonaForm()
+    return render(request, 'coordinador/personas/registrar_persona.html', {'form': form})
+
+
+@login_required
+@rol_requerido('Coordinador')
+def registrar_usuario(request):
+    form = RegistroUsuarioForm(request.POST or None)
+    if form.is_valid():
+        usuario = form.save(commit=False)
+        usuario.set_password("admin1234")  # O usa otro método si deseas
+        usuario.save()
+        return redirect('lista_usuarios')
+    return render(request, 'coordinador/usuarios/registrar_usuario.html', {'form': form})
+
+@rol_requerido('Coordinador')
+def lista_usuarios(request):
+    usuarios = Usuario.objects.select_related('persona', 'rol')
+    return render(request, 'coordinador/usuarios/lista_usuarios.html', {'usuarios': usuarios})
+
+@login_required
+@rol_requerido('Coordinador')
+def editar_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+    form = RegistroUsuarioForm(request.POST or None, instance=usuario)
+    if form.is_valid():
+        form.save()
+        return redirect('lista_usuarios')
+    return render(request, 'coordinador/usuarios/editar_usuario.html', {'form': form})
+
 
 
 def rol_requerido(rol_nombre):
@@ -361,7 +402,7 @@ def registrar_usuario_panel(request):
         usuario_form = RegistroUsuarioForm()
 
     # ✅ Esto va fuera del if
-    return render(request, 'coordinador/registrar_usuario.html', {
+    return render(request, 'coordinador/usuarios/registrar_usuario.html', {
         'persona_form': persona_form,
         'usuario_form': usuario_form
     })
@@ -388,6 +429,7 @@ def panel_coordinador(request):
         'usuarios_pendientes': usuarios_pendientes,
         'cantidad_pendientes': usuarios_pendientes.count()
     })
+
 
 @rol_requerido('Coordinador')
 def validar_usuarios(request):
