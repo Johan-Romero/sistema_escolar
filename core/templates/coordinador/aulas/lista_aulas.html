@@ -2,32 +2,39 @@
 {% block title %}Lista de Aulas{% endblock %}
 
 {% block content %}
-<h2 class="text-2xl font-semibold mb-4">🏫 Aulas Académicas</h2>
+<div class="bg-white p-6 rounded-xl shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-blue-800 flex items-center gap-2">🏫 Aulas Académicas</h2>
+        <a href="{% url 'nueva_aula' %}"
+           class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition">
+           + Nueva Aula
+        </a>
+    </div>
 
-<a href="{% url 'nueva_aula' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mb-4 inline-block">
-  + Nueva Aula
-</a>
-
-<table class="min-w-full bg-white border rounded">
-  <thead class="bg-gray-200">
-    <tr>
-      <th class="py-2 px-4 text-left">Nombre</th>
-      <th class="py-2 px-4 text-left">Capacidad</th>
-      <th class="py-2 px-4 text-left">Estado</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for aula in aulas %}
-      <tr class="border-t">
-        <td class="py-2 px-4">{{ aula.nombre }}</td>
-        <td class="py-2 px-4">{{ aula.capacidad }}</td>
-        <td class="py-2 px-4">{{ aula.estado }}</td>
-      </tr>
-    {% empty %}
-      <tr>
-        <td colspan="3" class="text-center py-4">No hay aulas registradas.</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    {% if aulas %}
+    <table class="w-full table-auto bg-white rounded-lg shadow">
+        <thead class="bg-gray-100 text-left text-gray-700 text-sm uppercase tracking-wider">
+            <tr>
+                <th class="px-6 py-3">Nombre</th>
+                <th class="px-6 py-3">Capacidad</th>
+                <th class="px-6 py-3">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for aula in aulas %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="px-6 py-3">{{ aula.nombre }}</td>
+                <td class="px-6 py-3">{{ aula.capacidad }}</td>
+                <td class="px-6 py-3">{{ aula.estado }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center py-12 text-gray-500">
+        <p class="text-xl">😕 No hay aulas registradas aún.</p>
+        <p class="text-sm mt-2">Haz clic en <strong>"+ Nueva Aula"</strong> para agregar una.</p>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

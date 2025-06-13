@@ -2,25 +2,33 @@
 {% block title %}Nueva Asignación{% endblock %}
 
 {% block content %}
-<h2 class="text-2xl font-semibold mb-6">➕ Asignar Docente</h2>
+<div class="bg-white p-6 rounded-xl shadow-md">
+    <h2 class="text-2xl font-bold text-blue-800 mb-6 flex items-center gap-2">➕ Asignar Docente</h2>
 
-<form method="post" class="bg-white p-6 rounded shadow-md">
-  {% csrf_token %}
-  <div class="mb-4">
-    <label class="block text-gray-700 font-medium">Docente</label>
-    {{ form.docente }}
-  </div>
-  <div class="mb-4">
-    <label class="block text-gray-700 font-medium">Grupo</label>
-    {{ form.grupo }}
-  </div>
-  <div class="mb-4">
-    <label class="block text-gray-700 font-medium">Asignatura</label>
-    {{ form.asignatura }}
-  </div>
-  <div class="flex gap-3">
-    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Guardar</button>
-    <a href="{% url 'lista_asignaciones' %}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancelar</a>
-  </div>
-</form>
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">Docente</label>
+            {{ form.docente }}
+        </div>
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">Grupo</label>
+            {{ form.grupo }}
+        </div>
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">Asignatura</label>
+            {{ form.asignatura }}
+        </div>
+        <div class="flex gap-3">
+            <button type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition">
+                Guardar
+            </button>
+            <a href="{% url 'lista_asignaciones' %}"
+               class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition">
+               Cancelar
+            </a>
+        </div>
+    </form>
+</div>
 {% endblock %}

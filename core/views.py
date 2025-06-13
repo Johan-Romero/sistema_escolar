@@ -1,12 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegistroUsuarioForm
+from .forms import RegistroUsuarioForm, LoginForm, RegistroUsuarioForm, PersonaForm, AreaForm, NivelEducativoForm, GradoForm, AsignaturaForm, TemaForm, LogroForm, AulaForm, GrupoForm, AsignacionDocenteForm
 from django.contrib.auth import authenticate, login, logout
-from .forms import LoginForm
 from .models import Usuario, Area, NivelEducativo, Grado, Asignatura, Tema, Logro, Aula, Grupo, AsignacionDocente
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from .forms import RegistroUsuarioForm, PersonaForm
-from .forms import AreaForm, NivelEducativoForm, GradoForm, AsignaturaForm, TemaForm, LogroForm, AulaForm, GrupoForm, AsignacionDocenteForm
 from .decoradores import rol_requerido
 from django.contrib import messages
 
@@ -369,7 +366,10 @@ def rol_requerido(rol_nombre):
 
 @rol_requerido('Coordinador')
 def panel_coordinador(request):
-    return render(request, 'coordinador/panel_coordinador.html')
+    cantidad_pendientes = Usuario.objects.filter(is_active=True).count()
+    return render(request, 'coordinador/panel_coordinador.html', {
+        'cantidad_pendientes': cantidad_pendientes
+    })
 
 @rol_requerido('Docente')
 def panel_docente(request):
