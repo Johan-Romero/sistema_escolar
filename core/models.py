@@ -103,7 +103,7 @@ class UsuarioManager(BaseUserManager):
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
     correo = models.EmailField(unique=True)
-    persona = models.OneToOneField('Persona', on_delete=models.CASCADE)
+    persona = models.OneToOneField('Persona', on_delete=models.SET_NULL, null=True)
     rol = models.ForeignKey('Rol', on_delete=models.PROTECT)
 
     is_active = models.BooleanField(default=True)
