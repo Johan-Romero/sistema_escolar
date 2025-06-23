@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegistroUsuarioForm, LoginForm, RegistroUsuarioForm, PersonaForm, AreaForm, NivelEducativoForm, GradoForm, AsignaturaForm, TemaForm, LogroForm, AulaForm, GrupoForm, AsignacionDocenteForm
+from .forms import RegistroUsuarioForm, LoginForm, RegistroUsuarioForm, PersonaForm, AreaForm, NivelEducativoForm, GradoForm, AsignaturaForm, AulaForm, GrupoForm, AsignacionDocenteForm
 from django.contrib.auth import authenticate, login, logout
-from .models import Usuario, Area, NivelEducativo, Grado, Asignatura, Tema, Logro, Aula, Grupo, AsignacionDocente
+from .models import Usuario, Area, NivelEducativo, Grado, Asignatura, Aula, Grupo, AsignacionDocente, Persona
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from .decoradores import rol_requerido
@@ -221,42 +221,6 @@ def editar_asignatura(request, asignatura_id):
         form = AsignaturaForm(instance=asignatura)
     return render(request, 'coordinador/asignaturas/form_asignatura.html', {'form': form, 'modo': 'Editar'})
 
-#Tema
-
-@rol_requerido('Coordinador')
-def lista_temas(request):
-    temas = Tema.objects.select_related('asignatura').all()
-    return render(request, 'coordinador/temas/lista_temas.html', {'temas': temas})
-
-@rol_requerido('Coordinador')
-def nuevo_tema(request):
-    if request.method == 'POST':
-        form = TemaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('lista_temas')
-    else:
-        form = TemaForm()
-    return render(request, 'coordinador/temas/nuevo_tema.html', {'form': form})
-
-
-#Logros
-
-@rol_requerido('Coordinador')
-def lista_logros(request):
-    logros = Logro.objects.select_related('asignatura').all()
-    return render(request, 'coordinador/logros/lista_logros.html', {'logros': logros})
-
-@rol_requerido('Coordinador')
-def nuevo_logro(request):
-    if request.method == 'POST':
-        form = LogroForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('lista_logros')
-    else:
-        form = LogroForm()
-    return render(request, 'coordinador/logros/nuevo_logro.html', {'form': form})
 
 #Aulas
 
@@ -326,16 +290,26 @@ def registrar_persona(request):
         form = PersonaForm()
     return render(request, 'coordinador/personas/registrar_persona.html', {'form': form})
 
+@rol_requerido('Coordinador')
+def listar_personas(request):
+    personas = Persona.objects.all()
+    return render(request, 'coordinador/personas/listar_personas.html', {'personas': personas})
 
 @login_required
 @rol_requerido('Coordinador')
 def registrar_usuario(request):
-    form = RegistroUsuarioForm(request.POST or None)
-    if form.is_valid():
-        usuario = form.save(commit=False)
-        usuario.set_password("admin1234")  # O usa otro método si deseas
-        usuario.save()
-        return redirect('lista_usuarios')
+    if request.method == 'POST':
+        form = RegistroUsuarioForm(request.POST)
+        if form.is_valid():
+            usuario = form.save(commit=False)
+            usuario.set_password(form.cleaned_data['password'])  # Esta línea encripta bien la clave
+            usuario.save()
+            print("Campos del formulario:", form.fields)
+            print("Errores:", form.errors)
+            return redirect('lista_usuarios')
+    else:
+        form = RegistroUsuarioForm()
+    
     return render(request, 'coordinador/usuarios/registrar_usuario.html', {'form': form})
 
 @rol_requerido('Coordinador')
@@ -350,10 +324,21 @@ def editar_usuario(request, usuario_id):
     form = RegistroUsuarioForm(request.POST or None, instance=usuario)
     if form.is_valid():
         form.save()
+        messages.success(request, "Usuario actualizado correctamente.")
         return redirect('lista_usuarios')
     return render(request, 'coordinador/usuarios/editar_usuario.html', {'form': form})
 
+@rol_requerido('Coordinador')
+def eliminar_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
 
+    if request.method == 'POST':
+        usuario.delete()
+        messages.success(request, "Usuario eliminado correctamente.")
+        return redirect('lista_usuarios')
+
+    # Protección si acceden por GET
+    return redirect('lista_usuarios')
 
 def rol_requerido(rol_nombre):
     def decorator(view_func):
@@ -363,13 +348,6 @@ def rol_requerido(rol_nombre):
             return HttpResponseForbidden("No tienes permiso para acceder a esta página.")
         return login_required(_wrapped_view)
     return decorator
-
-@rol_requerido('Coordinador')
-def panel_coordinador(request):
-    cantidad_pendientes = Usuario.objects.filter(is_active=True).count()
-    return render(request, 'coordinador/panel_coordinador.html', {
-        'cantidad_pendientes': cantidad_pendientes
-    })
 
 @rol_requerido('Docente')
 def panel_docente(request):
@@ -387,37 +365,16 @@ def panel_acudiente(request):
 # Protegida por rol 'Coordinador'. Usa el formulario RegistroUsuarioForm.
 @rol_requerido('coordinador')
 def registrar_usuario_panel(request):
-    from .forms import RegistroUsuarioForm, PersonaForm
-
     if request.method == 'POST':
-        persona_form = PersonaForm(request.POST)
-        usuario_form = RegistroUsuarioForm(request.POST)
-
-        if persona_form.is_valid() and usuario_form.is_valid():
-            persona = persona_form.save()
-            usuario = usuario_form.save(commit=False)
-            usuario.persona = persona
-            usuario.set_password(usuario_form.cleaned_data['password'])
-            usuario.save()
-
-            rol = usuario.rol.nombre.strip().lower()
-
-            if rol == 'estudiante':
-                Estudiante.objects.create(persona=persona)
-            elif rol == 'docente':
-                Docente.objects.create(persona=persona, especialidad='')
-            elif rol == 'acudiente':
-                Acudiente.objects.create(persona=persona)
-
-            return redirect('panel_coordinador')
+        form = RegistroUsuarioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_usuarios')
     else:
-        persona_form = PersonaForm()
-        usuario_form = RegistroUsuarioForm()
+        form = RegistroUsuarioForm()
 
-    # ✅ Esto va fuera del if
     return render(request, 'coordinador/usuarios/registrar_usuario.html', {
-        'persona_form': persona_form,
-        'usuario_form': usuario_form
+        'form': form
     })
 
 @login_required

@@ -1,29 +1,51 @@
 from django import forms
-from .models import Usuario, Rol, NivelEducativo, Grado, Persona, Ciudad, TipoDocumento, Departamento, Area, Asignatura, Tema, Logro, Aula, Grupo, AsignacionDocente
+from .models import Usuario, Rol, Persona, NivelEducativo, Grado, Persona, Area, Asignatura, Tema, Logro, Aula, Grupo, AsignacionDocente
 from django.contrib.auth.hashers import make_password
 
+
 class RegistroUsuarioForm(forms.ModelForm):
+    password = forms.CharField(
+        label='Contraseña',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-input block w-full border border-gray-300 rounded-md px-4 py-2',
+            'placeholder': 'Contraseña segura'
+        }),
+        help_text='Debe tener al menos 8 caracteres.'
+    )
+
     class Meta:
         model = Usuario
-        fields = ['correo', 'rol', 'persona', 'is_active']
+        fields = ['correo', 'password', 'rol', 'persona']
         widgets = {
-            'persona': forms.Select(attrs={'class': 'form-select'}),
+            'correo': forms.EmailInput(attrs={'class': 'form-input block w-full border border-gray-300 rounded-md px-4 py-2'}),
             'rol': forms.Select(attrs={'class': 'form-select'}),
+            'persona': forms.Select(attrs={'class': 'form-select'}),
         }
-    
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['rol'].queryset = Rol.objects.all()
+        self.fields['persona'].queryset = Persona.objects.all()
+
+    def clean_persona(self):
+        persona = self.cleaned_data.get('persona')
+        qs = Usuario.objects.filter(persona=persona)
+
+        # Si estamos editando, excluye el usuario actual
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+
+        if qs.exists():
+            raise forms.ValidationError("Esta persona ya está asociada a otro usuario.")
+        
+        return persona
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
-        # Aquí puedes agregar validaciones adicionales si lo deseas
+        if len(password) < 8:
+            raise forms.ValidationError("La contraseña debe tener al menos 8 caracteres.")
         return make_password(password)
     
-    def clean_persona(self):
-        persona = self.cleaned_data.get('persona')
-        if Usuario.objects.filter(persona=persona).exists():
-            raise forms.ValidationError("Esta persona ya está asociada a un usuario.")
-        return persona
-    
-
 class LoginForm(forms.Form):
     correo = forms.EmailField(label='Correo')
     password = forms.CharField(widget=forms.PasswordInput, label='Contraseña')
