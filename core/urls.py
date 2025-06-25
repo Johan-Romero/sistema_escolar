@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import registrar_usuario_panel, inicio, login_usuario, logout_view
 
-from .views import panel_coordinador, panel_docente, panel_estudiante, panel_acudiente, lista_areas, nueva_area, editar_area, lista_niveles, nuevo_nivel, editar_nivel, eliminar_nivel, lista_grados, registrar_grado, editar_grado, lista_asignaturas, registrar_asignatura, editar_asignatura, lista_aulas, nueva_aula, lista_grupos, nuevo_grupo, lista_asignaciones, nueva_asignacion, validar_usuarios, activar_usuario, lista_usuarios, editar_usuario, registrar_persona, registrar_usuario, eliminar_grado, listar_personas, registrar_usuario_panel, eliminar_usuario
+from .views import panel_coordinador, panel_docente, panel_estudiante, panel_acudiente, lista_areas, nueva_area, editar_area, lista_niveles, nuevo_nivel, editar_nivel, eliminar_nivel, lista_grados, registrar_grado, editar_grado, lista_asignaturas, registrar_asignatura, editar_asignatura, lista_aulas, nueva_aula, lista_grupos, nuevo_grupo, lista_asignaciones, nueva_asignacion, validar_usuarios, activar_usuario, lista_usuarios, editar_usuario, registrar_persona, registrar_usuario, eliminar_grado, listar_personas, registrar_usuario_panel, eliminar_usuario, hoja_vida_docente, editar_datos_docente
 
 
 urlpatterns = [
@@ -13,6 +13,10 @@ urlpatterns = [
     path('coordinador/', panel_coordinador, name='panel_coordinador'),
 
     path('docente/', panel_docente, name='panel_docente'),
+
+    path('docente/hoja-vida/', hoja_vida_docente, name='hoja_vida_docente'),
+
+    path('docente/hoja-vida/editar/', editar_datos_docente, name='editar_datos_docente'),
 
     path('estudiante/', panel_estudiante, name='panel_estudiante'),
 

@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegistroUsuarioForm, LoginForm, RegistroUsuarioForm, PersonaForm, AreaForm, NivelEducativoForm, GradoForm, AsignaturaForm, AulaForm, GrupoForm, AsignacionDocenteForm
+from .forms import DocenteForm, RegistroUsuarioForm, LoginForm, RegistroUsuarioForm, PersonaForm, AreaForm, NivelEducativoForm, GradoForm, AsignaturaForm, AulaForm, GrupoForm, AsignacionDocenteForm
 from django.contrib.auth import authenticate, login, logout
-from .models import Usuario, Area, NivelEducativo, Grado, Asignatura, Aula, Grupo, AsignacionDocente, Persona
+from .models import Usuario, Area, NivelEducativo, Grado, Asignatura, Aula, Grupo, AsignacionDocente, Persona, Docente
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponse
 from .decoradores import rol_requerido
 from django.contrib import messages
-
 
 
 def registro_usuario(request):
@@ -14,12 +13,11 @@ def registro_usuario(request):
         form = RegistroUsuarioForm(request.POST)
         if form.is_valid():
             # Guardamos el usuario
+            persona = form.cleaned_data['persona']
             usuario = form.save()
 
             # Extraemos los datos relacionados
-            nivel = form.cleaned_data['nivel_educativo']
-            grado = form.cleaned_data['grado']
-            persona = form.cleaned_data['persona']
+            
 
             # Aquí decides qué hacer con esa info:
             # ejemplo: si el rol es estudiante, crear el estudiante
@@ -302,8 +300,32 @@ def registrar_usuario(request):
         form = RegistroUsuarioForm(request.POST)
         if form.is_valid():
             usuario = form.save(commit=False)
-            usuario.set_password(form.cleaned_data['password'])  # Esta línea encripta bien la clave
+            usuario.persona = form.cleaned_data['persona']
+            print("🧠 Persona asignada al usuario:", usuario.persona)
             usuario.save()
+            
+
+            # Crear perfil automático según el rol
+            rol_nombre = usuario.rol.nombre.strip().lower()
+
+            if rol_nombre == 'docente':
+                from .models import Docente
+                if not Docente.objects.filter(persona=usuario.persona).exists():
+                    docente, creado = Docente.objects.get_or_create(
+                        persona=usuario.persona,
+                        defaults={'especialidad': 'Por definir'}
+                    )
+                    print("✅ Docente creado:", creado)
+
+            elif rol_nombre == 'estudiante':
+                from .models import Estudiante
+                if not Estudiante.objects.filter(persona=usuario.persona).exists():
+                    Estudiante.objects.create(persona=usuario.persona)
+
+            elif rol_nombre == 'acudiente':
+                from .models import Acudiente
+                if not Acudiente.objects.filter(persona=usuario.persona).exists():
+                    Acudiente.objects.create(persona=usuario.persona)
             print("Campos del formulario:", form.fields)
             print("Errores:", form.errors)
             return redirect('lista_usuarios')
@@ -352,6 +374,34 @@ def rol_requerido(rol_nombre):
 @rol_requerido('Docente')
 def panel_docente(request):
     return render(request, 'docente/panel_docente.html')
+
+@rol_requerido('Docente')
+def hoja_vida_docente(request):
+    print("🔍 Usuario:", request.user)
+    print("🔍 Persona:", request.user.persona)
+    persona = request.user.persona
+    if not persona:
+        return HttpResponse("Este usuario no tiene una persona asociada.")
+
+    docente = Docente.objects.filter(persona=persona).first()
+    if not docente:
+        return HttpResponse("Este usuario no tiene un perfil de Docente asignado.")
+    
+    return render(request, 'docente/hoja_vida.html', {'docente': docente})
+    
+
+@rol_requerido('Docente')
+def editar_datos_docente(request):
+    docente = get_object_or_404(Docente, persona=request.user.persona)
+    if request.method == 'POST':
+        form = DocenteForm(request.POST, instance=docente)
+        if form.is_valid():
+            form.save()
+            return redirect('hoja_vida_docente')
+    else:
+        form = DocenteForm(instance=docente)
+    return render(request, 'docente/editar_datos.html', {'form': form})
+
 
 @rol_requerido('Estudiante')
 def panel_estudiante(request):

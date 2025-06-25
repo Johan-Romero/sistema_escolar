@@ -1,0 +1,7 @@
+{% extends "layout/base_docente.html" %}
+{% block content %}
+<h1>Hoja de Vida del Docente</h1>
+<p><strong>Nombre:</strong> {{ docente.persona }}</p>
+<p><strong>Especialidad:</strong> {{ docente.especialidad }}</p>
+<a href="{% url 'editar_datos_docente' %}">Editar datos</a>
+{% endblock %}

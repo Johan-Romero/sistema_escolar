@@ -1,5 +1,5 @@
 from django import forms
-from .models import Usuario, Rol, Persona, NivelEducativo, Grado, Persona, Area, Asignatura, Tema, Logro, Aula, Grupo, AsignacionDocente
+from .models import Usuario, Rol, Persona, NivelEducativo, Grado, Persona, Area, Asignatura, Aula, Grupo, AsignacionDocente, Docente, FormacionAcademica, Capacitacion, Idioma, ExperienciaLaboral
 from django.contrib.auth.hashers import make_password
 
 
@@ -99,25 +99,6 @@ class AsignaturaForm(forms.ModelForm):
             'area': forms.Select(attrs={'class': 'form-select'}),
         }
 
-class TemaForm(forms.ModelForm):
-    class Meta:
-        model = Tema
-        fields = ['asignatura', 'nombre']
-        widgets = {
-            'asignatura': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded'}),
-            'nombre': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border rounded'}),
-        }
-
-
-class LogroForm(forms.ModelForm):
-    class Meta:
-        model = Logro
-        fields = ['asignatura', 'descripcion']
-        widgets = {
-            'asignatura': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded'}),
-            'descripcion': forms.Textarea(attrs={'rows': 4, 'class': 'w-full px-4 py-2 border rounded'}),
-        }
-
 
 class AulaForm(forms.ModelForm):
     class Meta:
@@ -151,3 +132,30 @@ class AsignacionDocenteForm(forms.ModelForm):
             'grupo': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded'}),
             'asignatura': forms.Select(attrs={'class': 'w-full px-4 py-2 border rounded'}),
         }
+
+#DOCENTE
+
+class DocenteForm(forms.ModelForm):
+    class Meta:
+        model = Docente
+        fields = ['especialidad']
+
+class FormacionAcademicaForm(forms.ModelForm):
+    class Meta:
+        model = FormacionAcademica
+        exclude = ['docente']
+
+class CapacitacionForm(forms.ModelForm):
+    class Meta:
+        model = Capacitacion
+        exclude = ['docente']
+
+class IdiomaForm(forms.ModelForm):
+    class Meta:
+        model = Idioma
+        exclude = ['docente']
+
+class ExperienciaLaboralForm(forms.ModelForm):
+    class Meta:
+        model = ExperienciaLaboral
+        exclude = ['docente']

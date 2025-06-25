@@ -3,6 +3,65 @@
 {% block title %}Panel del Docente{% endblock %}
 
 {% block content %}
-<h2>Bienvenido, Docente</h2>
-<p>Desde aquí puedes gestionar tareas, calificaciones</p>
+<div class="container mt-4">
+  <h2 class="mb-4">Bienvenido, Docente</h2>
+  <p>Desde aquí puedes gestionar tu hoja de vida, actividades académicas y estudiantes asignados.</p>
+
+  <div class="row mt-4">
+    <!-- Hoja de Vida -->
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">🧾 Hoja de Vida</h5>
+          <p class="card-text">Consulta y edita tus datos personales y profesionales.</p>
+          <a href="{% url 'hoja_vida_docente' %}" class="btn btn-primary">Ver Hoja de Vida</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formación Académica -->
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">🎓 Formación Académica</h5>
+          <p class="card-text">Registra tus estudios formales y complementarios.</p>
+          <a href="#" class="btn btn-secondary disabled">Próximamente</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actividades -->
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">📚 Actividades Académicas</h5>
+          <p class="card-text">Crea y gestiona actividades para tus grupos y asignaturas.</p>
+          <a href="#" class="btn btn-secondary disabled">Próximamente</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calificaciones -->
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">📝 Calificaciones</h5>
+          <p class="card-text">Registra y actualiza las notas de tus estudiantes.</p>
+          <a href="#" class="btn btn-secondary disabled">Próximamente</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reportes -->
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">📊 Reportes</h5>
+          <p class="card-text">Visualiza reportes de notas y observaciones académicas.</p>
+          <a href="#" class="btn btn-secondary disabled">Próximamente</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
