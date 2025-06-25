@@ -1,7 +1,8 @@
-from core.models import Usuario
+from .models import Usuario
 
-def notificaciones_context(request):
-    if request.user.is_authenticated and request.user.rol.nombre == 'Coordinador':
-        cantidad_pendientes = Usuario.objects.filter(is_active=True).count()
-        return {'notificaciones_pendientes': cantidad_pendientes}
-    return {}
+def usuarios_pendientes(request):
+    if request.user.is_authenticated and hasattr(request.user, 'rol'):
+        if request.user.rol.nombre.lower() == 'coordinador':
+            cantidad = Usuario.objects.filter(is_active=False).count()
+            return {'notificaciones_pendientes': cantidad}
+    return {'notificaciones_pendientes': 0}

@@ -4,53 +4,72 @@
 {% block content %}
 <div class="text-center mb-10">
   <h1 class="text-4xl font-bold text-gray-800">Panel del Coordinador</h1>
-  <p class="text-gray-600 mt-2 text-lg">Administra usuarios, docentes, estudiantes y recursos académicos de forma
-    eficiente.</p>
+  <p class="text-gray-600 mt-2 text-lg">
+    Administra usuarios, docentes, estudiantes y recursos académicos de forma eficiente.
+  </p>
 </div>
 
-<section class="mb-10 p-6 bg-white rounded-xl shadow-lg">
-  <h2 class="text-2xl font-semibold text-gray-700 mb-4 flex items-center">
-    <i class="fa-solid fa-user-clock mr-3 text-orange-500"></i> Usuarios Pendientes de Activación
-  </h2>
-  {% if cantidad_pendientes > 0 %}
-  <p class="text-gray-600 mb-2">Hay {{ cantidad_pendientes }} usuario(s) esperando ser activados.</p>
-  <a href="{% url 'validar_usuarios' %}" class="text-blue-600 underline hover:text-blue-800">Ir a validar usuarios</a>
-  {% else %}
-  <p class="text-gray-600">No hay usuarios pendientes por activar en este momento.</p>
-  {% endif %}
+<!-- 🟠 Sección: Usuarios pendientes de activación -->
+<section class="mb-10 p-6 bg-white rounded-xl shadow-lg border-l-4 border-orange-500">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+        <i class="fa-solid fa-user-clock text-orange-500"></i>
+        Usuarios Pendientes de Activación
+      </h2>
+      {% if cantidad_pendientes > 0 %}
+        <p class="text-gray-600 mt-2">
+          Hay <span class="font-bold text-orange-600">{{ cantidad_pendientes }}</span> usuario(s) esperando ser activados.
+        </p>
+      {% else %}
+        <p class="text-gray-500 mt-2">No hay usuarios pendientes por activar en este momento.</p>
+      {% endif %}
+    </div>
+
+    {% if cantidad_pendientes > 0 %}
+      <a href="{% url 'validar_usuarios' %}" 
+         class="inline-flex items-center bg-orange-500 text-white font-medium px-5 py-2.5 rounded-md shadow hover:bg-orange-600 transition">
+        <i class="fa-solid fa-check mr-2"></i> Validar Usuarios
+      </a>
+    {% endif %}
+  </div>
 </section>
 
+<!-- ✅ Sección: Acciones principales -->
 <section>
   <h2 class="text-2xl font-semibold text-gray-700 mb-6">Acciones Principales</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <a href="{% url 'registrar_usuario' %}"
-      class="block bg-gradient-to-r from-blue-500 to-blue-600 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 text-white">
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+    <!-- 🔵 Registrar Usuario -->
+    <a href="{% url 'registrar_usuario_panel' %}"
+      class="block bg-gradient-to-r from-blue-500 to-blue-600 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1 text-white">
       <div class="flex items-center mb-3">
         <i class="fa-solid fa-user-plus fa-2x mr-4"></i>
         <h3 class="text-2xl font-bold">Registrar Usuario</h3>
       </div>
-      <p class="opacity-90">Crea nuevos perfiles para estudiantes, docentes o acudientes y asígnales su rol
-        correspondiente.</p>
+      <p class="opacity-90">Crea nuevos perfiles para estudiantes, docentes o acudientes y asígnales su rol correspondiente.</p>
     </a>
 
-      <a href="{% url 'registrar_persona' %}"
-        class="block bg-gradient-to-r from-green-400 to-green-600 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 text-white">
-        <div class="flex items-center mb-3">
-          <i class="fa-solid fa-user-plus fa-2x mr-4"></i> 
-          <h3 class="text-2xl font-bold">Registrar Persona</h3>
-        </div>
-        <p class="opacity-90">Crea nuevas personas.</p>
-      </a>
+    <!-- 🟢 Registrar Persona -->
+    <a href="{% url 'registrar_persona' %}"
+      class="block bg-gradient-to-r from-green-400 to-green-600 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1 text-white">
+      <div class="flex items-center mb-3">
+        <i class="fa-solid fa-user-plus fa-2x mr-4"></i>
+        <h3 class="text-2xl font-bold">Registrar Persona</h3>
+      </div>
+      <p class="opacity-90">Crea nuevas personas en el sistema para luego asociarlas a usuarios.</p>
+    </a>
 
-      <a href="{% url 'lista_usuarios' %}"
-        class="block bg-gradient-to-r from-purple-500 to-purple-600 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 text-white">
-        <div class="flex items-center mb-3">
-          <i class="fa-solid fa-users fa-2x mr-4"></i>
-          <h3 class="text-2xl font-bold">Gestión de Usuarios</h3>
-        </div>
-        <p class="opacity-90">Consulta, edita y administra los usuarios registrados en la plataforma.</p>
-      </a>
+    <!-- 🟣 Gestión de Usuarios -->
+    <a href="{% url 'lista_usuarios' %}"
+      class="block bg-gradient-to-r from-purple-500 to-purple-600 p-8 rounded-xl shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1 text-white">
+      <div class="flex items-center mb-3">
+        <i class="fa-solid fa-users fa-2x mr-4"></i>
+        <h3 class="text-2xl font-bold">Gestión de Usuarios</h3>
+      </div>
+      <p class="opacity-90">Consulta, edita y administra los usuarios registrados en la plataforma.</p>
+    </a>
 
-    </div>
+  </div>
 </section>
 {% endblock %}
