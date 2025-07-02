@@ -1,0 +1,87 @@
+{% extends 'layout/base.html' %}
+{% load static %} {# Si usas static files #}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
+  <div class="bg-white shadow-xl rounded-2xl p-10 w-full max-w-3xl">
+    <div class="flex items-center gap-3 mb-8">
+      <i class="fa-solid fa-user text-purple-700 text-3xl"></i>
+      <h2 class="text-2xl font-bold text-gray-800">Editar Perfil</h2>
+    </div>
+
+    {# Muestra mensajes de Django #}
+    {% if messages %}
+        <ul class="mb-4">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }} text-center py-2 px-4 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% endif %}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post" action="{% url 'editar_perfil' %}" class="space-y-6">
+      {% csrf_token %} {# ¡CRUCIAL para la seguridad en formularios Django! #}
+
+      {# Errores del formulario que no están asociados a un campo específico #}
+      {% if form_persona.non_field_errors %}
+          <div class="text-red-600 text-sm mb-4">
+              {% for error in form_persona.non_field_errors %}
+                  <p>{{ error }}</p>
+              {% endfor %}
+          </div>
+      {% endif %}
+      {% if form_usuario.non_field_errors %}
+          <div class="text-red-600 text-sm mb-4">
+              {% for error in form_usuario.non_field_errors %}
+                  <p>{{ error }}</p>
+              {% endfor %}
+          </div>
+      {% endif %}
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        {# Iterar y renderizar los campos del formulario de Usuario #}
+        {% for field in form_usuario %}
+          <div>
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}:</label>
+            {{ field }} {# Esto renderiza el input con los widgets definidos en forms.py #}
+            {% if field.help_text %}
+              <p class="mt-1 text-xs text-gray-500">{{ field.help_text }}</p>
+            {% endif %}
+            {% if field.errors %}
+              <ul class="text-red-600 text-xs mt-1">
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        {# Iterar y renderizar los campos del formulario de Persona #}
+        {% for field in form_persona %}
+          <div>
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}:</label>
+            {{ field }} {# Esto renderiza el input con los widgets definidos en forms.py #}
+            {% if field.help_text %}
+              <p class="mt-1 text-xs text-gray-500">{{ field.help_text }}</p>
+            {% endif %}
+            {% if field.errors %}
+              <ul class="text-red-600 text-xs mt-1">
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+      </div>
+
+      <div class="mt-6 flex flex-col sm:flex-row justify-end gap-3">
+        <button type="submit" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition duration-300 ease-in-out text-center w-full sm:w-auto">Guardar cambios</button>
+        <a href="{% url 'ver_perfil' %}" class="bg-gray-300 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out text-center w-full sm:w-auto">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

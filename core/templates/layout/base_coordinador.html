@@ -17,7 +17,7 @@
     <aside class="w-64 bg-slate-800 text-white shadow-lg">
       <div class="p-6">
         <div class="flex items-center gap-2 mb-6">
-          <img src="{% static 'img/icono_docente.jpg' %}" class="h-10 w-10 rounded-full" alt="Icono coordinador">
+          <img src="{% static 'img/icono_coordinador.jpg' %}" class="h-10 w-10 rounded-full" alt="Icono coordinador">
           <span class="text-lg font-semibold">Coordinador</span>
         </div>
         <nav class="space-y-2">
@@ -82,7 +82,8 @@
                 <div class="px-4 py-2 border-b font-semibold">
                   {{ request.user.correo }}
                 </div>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100">👤 Ver perfil</a>
+                
+                <a href="{%url 'ver_perfil'%}" class="block px-4 py-2 hover:bg-gray-100">👤 Ver perfil</a>
                 <a href="{% url 'logout' %}" class="block px-4 py-2 hover:bg-gray-100">🔓 Cerrar sesión</a>
               </div>
             </div>
