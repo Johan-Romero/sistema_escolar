@@ -1,50 +1,59 @@
 {% extends "layout/base_coordinador.html" %}
-
 {% block title %}Gestión de Usuarios{% endblock %}
 
 {% block content %}
-<div class="bg-white p-6 rounded-lg shadow-md mb-6">
-  <h1 class="text-3xl font-bold text-gray-800 mb-2">Gestión de Usuarios</h1>
-  <p class="text-gray-600 text-lg">Consulta, edita o elimina usuarios registrados en el sistema.</p>
-</div>
+<div class="max-w-6xl mx-auto">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+    <i class="fa-solid fa-users text-purple-500"></i>
+    <span>Gestión de Usuarios</span>
+  </h1>
 
-<div class="bg-white p-4 rounded-lg shadow overflow-x-auto">
-  <table class="min-w-full text-sm text-left text-gray-700">
-    <thead class="bg-blue-600 text-white">
-      <tr>
-        <th class="px-4 py-2">Correo</th>
-        <th class="px-4 py-2">Rol</th>
-        <th class="px-4 py-2">Nombre Completo</th>
-        <th class="px-4 py-2">Estado</th>
-        <th class="px-4 py-2">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for usuario in usuarios %}
-      <tr class="border-b">
-        <td class="px-4 py-2">{{ usuario.correo }}</td>
-        <td class="px-4 py-2">{{ usuario.rol.nombre }}</td>
-        <td class="px-4 py-2">{{ usuario.persona }}</td>
-        <td class="px-4 py-2">
-          {% if usuario.is_active %}
-            <span class="text-green-600 font-semibold">Activo</span>
-          {% else %}
-            <span class="text-red-600 font-semibold">Inactivo</span>
-          {% endif %}
-        </td>
-        <td class="px-4 py-2 space-x-2">
-          <a href="#" class="text-blue-600 hover:underline">Editar</a>
-          <a href="#" class="text-red-600 hover:underline" onclick="return confirm('¿Estás seguro de eliminar este usuario?')">Eliminar</a>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="5" class="text-center py-4 text-gray-500">No hay usuarios registrados.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+  <div class="bg-white rounded-lg shadow-lg overflow-x-auto border border-gray-200">
+    <table class="min-w-full text-sm text-gray-800">
+      <thead class="bg-purple-600 text-white text-left uppercase text-xs font-bold">
+        <tr>
+          <th class="px-6 py-3">Correo</th>
+          <th class="px-6 py-3">Rol</th>
+          <th class="px-6 py-3">Nombre Completo</th>
+          <th class="px-6 py-3">Estado</th>
+          <th class="px-6 py-3">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for usuario in usuarios %}
+        <tr class="border-t hover:bg-gray-50 transition">
+          <td class="px-6 py-3">{{ usuario.correo }}</td>
+          <td class="px-6 py-3">{{ usuario.rol.nombre }}</td>
+          <td class="px-6 py-3">{{ usuario.persona }}</td>
+          <td class="px-6 py-3">
+            {% if usuario.is_active %}
+              <span class="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">Activo</span>
+            {% else %}
+              <span class="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold">Inactivo</span>
+            {% endif %}
+          </td>
+          <td class="px-6 py-3 space-x-2">
+            <a href="{% url 'editar_usuario' usuario.id %}" class="text-blue-600 hover:underline font-medium">Editar</a>
+            <form method="POST" action="{% url 'eliminar_usuario' usuario.id %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este usuario?')"
+                class="text-red-600 hover:underline font-medium">
+                Eliminar
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center py-6 text-gray-500">No hay usuarios registrados.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-<a href="{% url 'panel_coordinador' %}" class="inline-block mt-6 text-blue-600 hover:underline">← Volver al Panel del Coordinador</a>
+  <div class="mt-8 text-right">
+    <a href="{% url 'panel_coordinador' %}" class="text-blue-600 hover:underline font-medium">← Volver al Panel</a>
+  </div>
+</div>
 {% endblock %}

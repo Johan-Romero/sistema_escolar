@@ -1,0 +1,31 @@
+{% extends "layout/base_coordinador.html" %}
+{% block title %}Lista de Personas{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Personas Registradas</h1>
+<table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+    <thead class="bg-gray-200">
+        <tr>
+            <th class="py-2 px-4 text-left">Nombre</th>
+            <th class="py-2 px-4 text-left">Documento</th>
+            <th class="py-2 px-4 text-left">Ciudad</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for persona in personas %}
+        <tr class="border-b">
+            <td class="py-2 px-4">{{ persona.primer_nombre }} {{ persona.primer_apellido }}</td>
+            <td class="py-2 px-4">{{ persona.tipo_documento }} {{ persona.numero_documento }}</td>
+            <td class="py-2 px-4">{{ persona.ciudad }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3" class="text-center py-4">No hay personas registradas.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <a href="{% url 'panel_coordinador' %}"
+        class="inline-block mb-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+        ← Volver al Panel del Coordinador
+    </a>
+</table>
+{% endblock %}

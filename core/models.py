@@ -106,7 +106,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     persona = models.OneToOneField('Persona', on_delete=models.SET_NULL, null=True)
     rol = models.ForeignKey('Rol', on_delete=models.PROTECT)
 
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'correo'
@@ -123,6 +123,34 @@ class Estudiante(models.Model):
 class Docente(models.Model):
     persona = models.OneToOneField(Persona, on_delete=models.CASCADE)
     especialidad = models.CharField(max_length=100)
+
+class FormacionAcademica(models.Model):
+    docente = models.ForeignKey(Docente, on_delete=models.CASCADE)
+    titulo = models.CharField(max_length=100)
+    institucion = models.CharField(max_length=100)
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+    nivel = models.CharField(max_length=50)  # Ej: Pregrado, Maestría
+
+class Capacitacion(models.Model):
+    docente = models.ForeignKey(Docente, on_delete=models.CASCADE)
+    nombre = models.CharField(max_length=100)
+    institucion = models.CharField(max_length=100)
+    duracion_horas = models.IntegerField()
+    fecha = models.DateField()
+
+class Idioma(models.Model):
+    docente = models.ForeignKey(Docente, on_delete=models.CASCADE)
+    idioma = models.CharField(max_length=50)
+    nivel = models.CharField(max_length=50)  # Básico, intermedio, avanzado
+
+class ExperienciaLaboral(models.Model):
+    docente = models.ForeignKey(Docente, on_delete=models.CASCADE)
+    institucion = models.CharField(max_length=100)
+    cargo = models.CharField(max_length=100)
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+
 
 class Acudiente(models.Model):
     persona = models.OneToOneField(Persona, on_delete=models.CASCADE)
@@ -159,22 +187,6 @@ class Asignatura(models.Model):
         unique_together = ('nombre', 'grado', 'area')
 
     def __str__(self):
-        return self.nombre
-
-class Tema(models.Model):
-    asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE, related_name="temas")
-    nombre = models.CharField(max_length=100)
-
-    def str(self):
-        return self.nombre
-
-
-
-class Logro(models.Model):
-    asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE, related_name="logros")
-    descripcion = models.TextField()
-
-    def str(self):
         return self.nombre
 
 class Aula(models.Model):
@@ -218,3 +230,5 @@ class Calificacion(models.Model):
     estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
     nota = models.DecimalField(max_digits=3, decimal_places=1)
     fecha_registro = models.DateField(auto_now_add=True)
+
+

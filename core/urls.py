@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import registrar_usuario_panel, inicio, login_usuario, logout_view
 
-from .views import panel_coordinador, panel_docente, panel_estudiante, panel_acudiente, lista_areas, nueva_area, editar_area, lista_niveles, nuevo_nivel, editar_nivel, eliminar_nivel, lista_grados, registrar_grado, editar_grado, lista_asignaturas, registrar_asignatura, editar_asignatura, lista_temas, nuevo_tema, lista_logros, nuevo_logro, lista_aulas, nueva_aula, lista_grupos, nuevo_grupo, lista_asignaciones, nueva_asignacion, validar_usuarios, activar_usuario, lista_usuarios, editar_usuario, registrar_persona, registrar_usuario, eliminar_grado
+from .views import panel_coordinador, panel_docente, panel_estudiante, panel_acudiente, lista_areas, nueva_area, editar_area, lista_niveles, nuevo_nivel, editar_nivel, eliminar_nivel, lista_grados, registrar_grado, editar_grado, lista_asignaturas, registrar_asignatura, editar_asignatura, lista_aulas, nueva_aula, lista_grupos, nuevo_grupo, lista_asignaciones, nueva_asignacion, validar_usuarios, activar_usuario, lista_usuarios, editar_usuario, registrar_persona, registrar_usuario, eliminar_grado, listar_personas, registrar_usuario_panel, eliminar_usuario, hoja_vida_docente, editar_datos_docente
 
 
 urlpatterns = [
@@ -13,6 +13,10 @@ urlpatterns = [
     path('coordinador/', panel_coordinador, name='panel_coordinador'),
 
     path('docente/', panel_docente, name='panel_docente'),
+
+    path('docente/hoja-vida/', hoja_vida_docente, name='hoja_vida_docente'),
+
+    path('docente/hoja-vida/editar/', editar_datos_docente, name='editar_datos_docente'),
 
     path('estudiante/', panel_estudiante, name='panel_estudiante'),
 
@@ -48,14 +52,6 @@ urlpatterns = [
 
     path('coordinador/asignaturas/<int:asignatura_id>/editar/',editar_asignatura, name='editar_asignatura'),
 
-    path('coordinador/temas/', lista_temas, name='lista_temas'),
-
-    path('coordinador/temas/nuevo/', nuevo_tema, name='nuevo_tema'),
-
-    path('coordinador/logros/', lista_logros, name='lista_logros'),
-
-    path('coordinador/logros/nuevo/', nuevo_logro, name='nuevo_logro'),
-
     path('coordinador/aulas/', lista_aulas, name='lista_aulas'),
 
     path('coordinador/aulas/nueva/', nueva_aula, name='nueva_aula'),
@@ -74,13 +70,20 @@ urlpatterns = [
 
     path('coordinador/usuarios/', lista_usuarios, name='lista_usuarios'),
 
-    path('coordinador/usuarios/editar/<int:nivel_id>/', editar_usuario, name='editar_usuarios'),
+    path('coordinador/usuarios/editar/<int:usuario_id>/', editar_usuario, name='editar_usuario'),
+
+    path('coordinador/usuarios/eliminar/<int:usuario_id>/', eliminar_usuario, name='eliminar_usuario'),
     
     path('coordinador/personas/nueva/', registrar_persona, name='registrar_persona'),
 
     path('coordinador/registrar_usuario/', registrar_usuario, name='registrar_usuario'),
 
     path('coordinador/personas/nuevo/', registrar_persona, name='registrar_persona'),
+
+    path('coordinador/personas/', listar_personas, name='listar_personas'),
+
+    path('coordinador/registrar_usuario_panel/', registrar_usuario_panel, name='registrar_usuario_panel'),
+
 ]
 
 
