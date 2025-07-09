@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponse
 from .decoradores import rol_requerido
 from django.contrib import messages
-
+from .models import Estudiante, Calificacion, Actividad
 
 def registro_usuario(request):
     if request.method == 'POST':
@@ -405,7 +405,16 @@ def editar_datos_docente(request):
 
 @rol_requerido('Estudiante')
 def panel_estudiante(request):
-    return render(request, 'estudiantes/panel_estudiante.html')
+    usuario = request.user
+    estudiante = Estudiante.objects.get(persona=usuario.persona)
+
+    # Obtener calificaciones del estudiante
+    calificaciones = Calificacion.objects.filter(estudiante=estudiante).select_related('actividad__asignacion')
+
+    return render(request, 'estudiante/panel.html', {
+        'estudiante': estudiante,
+        'calificaciones': calificaciones,
+    })
 
 @rol_requerido('Acudiente')
 def panel_acudiente(request):
