@@ -1,0 +1,50 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
+  <div class="bg-white shadow-xl rounded-2xl p-10 w-full max-w-3xl">
+    <div class="flex items-center gap-3 mb-8">
+      <i class="fa-solid fa-user text-purple-700 text-3xl"></i>
+      <h2 class="text-2xl font-bold text-gray-800">Mi Perfil</h2>
+    </div>
+
+    {# Muestra mensajes de Django (ej. 'Perfil actualizado correctamente.') #}
+    {% if messages %}
+        <ul class="mb-4">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }} text-center py-2 px-4 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% endif %}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+
+      <div>📧 <strong>Correo:</strong> {{ request.user.correo }}</div>
+      <div>👤 <strong>Nombre completo:</strong>
+        {{ request.user.persona.primer_nombre }} {{ request.user.persona.segundo_nombre|default:"" }} {{ request.user.persona.primer_apellido }} {{ request.user.persona.segundo_apellido|default:"" }}
+      </div>
+      <div>🏷️ <strong>Rol:</strong> {{ request.user.rol.nombre|default:"No asignado" }}</div>
+      <div>📱 <strong>Teléfono:</strong> {{ request.user.persona.telefono|default:"No registrado" }}</div>
+      <div>🏠 <strong>Dirección:</strong> {{ request.user.persona.direccion_linea1|default:"No registrada" }}</div>
+      <div>🎂 <strong>Fecha de nacimiento:</strong> {{ request.user.persona.fecha_nacimiento|date:"d/m/Y"|default:"-" }}</div>
+      <div>⚧️ <strong>Género:</strong>
+        {% if request.user.persona.sexo == "M" %}Masculino
+        {% elif request.user.persona.sexo == "F" %}Femenino
+        {% else %}No especificado
+        {% endif %}
+     <div class="md:col-span-2 mt-6 flex justify-between items-center w-full">
+    <a href="{% url 'panel_coordinador' %}" 
+       class="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition duration-300 ease-in-out inline-flex items-center justify-center space-x-2 text-base font-medium">
+        <i class="fa-solid fa-arrow-left"></i> <span>Regresar</span>
+    </a>
+
+    <a href="{% url 'editar_perfil' %}" 
+       class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition duration-300 ease-in-out inline-flex items-center justify-center space-x-2 text-base font-medium">
+        <span>Editar perfil</span>
+        <i class="fa-solid fa-pencil"></i> </a>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

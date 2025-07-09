@@ -2,8 +2,8 @@ from django.urls import path
 
 from .views import registrar_usuario_panel, inicio, login_usuario, logout_view
 
-from .views import panel_coordinador, panel_docente, panel_estudiante, panel_acudiente, lista_areas, nueva_area, editar_area, lista_niveles, nuevo_nivel, editar_nivel, eliminar_nivel, lista_grados, registrar_grado, editar_grado, lista_asignaturas, registrar_asignatura, editar_asignatura, lista_aulas, nueva_aula, lista_grupos, nuevo_grupo, lista_asignaciones, nueva_asignacion, validar_usuarios, activar_usuario, lista_usuarios, editar_usuario, registrar_persona, registrar_usuario, eliminar_grado, listar_personas, registrar_usuario_panel, eliminar_usuario, hoja_vida_docente, editar_datos_docente
-
+from .views import panel_coordinador, panel_docente, panel_estudiante, panel_acudiente, lista_areas, nueva_area, editar_area, eliminar_area, lista_niveles, nuevo_nivel, editar_nivel, eliminar_nivel, lista_grados, registrar_grado, editar_grado, lista_asignaturas, registrar_asignatura, editar_asignatura, lista_aulas, nueva_aula, lista_grupos, nuevo_grupo, lista_asignaciones, nueva_asignacion, validar_usuarios, activar_usuario, lista_usuarios, editar_usuario, registrar_persona, registrar_usuario, eliminar_grado, listar_personas, registrar_usuario_panel, eliminar_usuario, hoja_vida_docente, editar_datos_docente
+from .views import ver_perfil, editar_perfil
 
 urlpatterns = [
     path('', inicio, name='inicio'),
@@ -27,6 +27,8 @@ urlpatterns = [
     path('coordinador/areas/<int:area_id>/editar/', editar_area, name='editar_area'),
 
     path('coordinador/areas/nuevo/', nueva_area, name='nueva_area'),
+   
+    path ('coordinador/areas<int:area_id>/elminar/', eliminar_area, name= 'eliminar_area'),
 
     path('logout/', logout_view, name='logout'),
 
@@ -84,7 +86,12 @@ urlpatterns = [
 
     path('coordinador/registrar_usuario_panel/', registrar_usuario_panel, name='registrar_usuario_panel'),
 
-]
+    path('perfil/', ver_perfil, name='ver_perfil'), #
+    path('perfil/editar/', editar_perfil, name='editar_perfil'), #
 
+    
+
+
+]
 
 
