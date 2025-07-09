@@ -105,8 +105,9 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     correo = models.EmailField(unique=True)
     persona = models.OneToOneField('Persona', on_delete=models.SET_NULL, null=True)
     rol = models.ForeignKey('Rol', on_delete=models.PROTECT)
+    nombre_de_usuario = models.CharField(max_length=150, blank=True, null=True)
 
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'correo'
@@ -116,6 +117,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.correo
+
 
 class Estudiante(models.Model):
     persona = models.OneToOneField(Persona, on_delete=models.CASCADE)
@@ -157,9 +159,14 @@ class Acudiente(models.Model):
 
 class NivelEducativo(models.Model):
     nombre = models.CharField(max_length=50, unique=True)
+    descripcion = models.TextField(blank=True, null=True) # New field
 
     def __str__(self):
         return self.nombre
+
+
+
+    
 
 class Grado(models.Model):
     nivel = models.ForeignKey(NivelEducativo, on_delete=models.CASCADE, related_name="grados")
@@ -177,6 +184,7 @@ class Area(models.Model):
 
     def __str__(self):
         return self.nombre
+    
 
 class Asignatura(models.Model):
     nombre = models.CharField(max_length=100)

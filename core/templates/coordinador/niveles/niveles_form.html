@@ -1,26 +1,83 @@
-{% extends 'layout/base_coordinador.html' %}
+{# niveles_form.html #}
+{% extends "layout/base_coordinador.html" %}
+{% block title %}Nivel Educativo Formulario{% endblock %}
 {% block content %}
-<div class="bg-white p-6 rounded-xl shadow-md w-full max-w-xl mx-auto">
-    <h2 class="text-2xl font-bold text-blue-800 mb-6 flex items-center gap-2">📚 Nivel Educativo</h2>
-    <form method="post">
-        {% csrf_token %}
-        
+<div class="min-h-screen flex justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg">
+    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      {% if form.instance.pk %}Editar Nivel Educativo{% else %}Crear Nuevo Nivel Educativo{% endif %}
+    </h2>
 
-        <div class="mb-4 ">
-            <label class="block text-gray-700 mb-1 font-medium ">Nombre del Área:</label>
-            {{ form.nombre }}
-        </div>
+    {# Mensajes de Django #}
+    {% if messages %}
+        <ul class="mb-4">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }} text-center py-2 px-4 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% endif %}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-        <button type="submit"
-            class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md font-semibold transition">💾
-            Guardar</button>
-        <a href="{% url 'lista_niveles' %}" class="bg-red-100 text-red-600 px-4 py-2 rounded-md hover:bg-red-200">❌
-            Cancelar</a>
-        {% if form.errors %}
-        <div class="alert alert-danger">
-            {{ form.errors }}
+    <form method="post" class="mt-8 space-y-6">
+      {% csrf_token %} {# ¡Importante para la seguridad! #}
+
+      {# Renderizar los errores del formulario no específicos de un campo #}
+      {% if form.non_field_errors %}
+          <div class="text-red-600 text-sm mb-4">
+              {% for error in form.non_field_errors %}
+                  <p>{{ error }}</p>
+              {% endfor %}
+          </div>
+      {% endif %}
+
+      <div>
+        <label for="{{ form.nombre.id_for_label }}" class="block text-sm font-medium text-gray-700">
+          {{ form.nombre.label }}
+        </label>
+        <div class="mt-1">
+          {{ form.nombre }} {# Esto renderizará el input con los estilos y placeholder #}
         </div>
+        {% if form.nombre.help_text %}
+          <p class="mt-2 text-sm text-gray-500">{{ form.nombre.help_text }}</p>
         {% endif %}
+        {% if form.nombre.errors %}
+          <ul class="mt-2 text-sm text-red-600">
+            {% for error in form.nombre.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      {# New field: Descripcion #}
+      <div>
+        <label for="{{ form.descripcion.id_for_label }}" class="block text-sm font-medium text-gray-700">
+          {{ form.descripcion.label }}
+        </label>
+        <div class="mt-1">
+          {{ form.descripcion }}
+        </div>
+        {% if form.descripcion.help_text %}
+          <p class="mt-2 text-sm text-gray-500">{{ form.descripcion.help_text }}</p>
+        {% endif %}
+        {% if form.descripcion.errors %}
+          <ul class="mt-2 text-sm text-red-600">
+            {% for error in form.descripcion.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+
+      <div class="flex justify-end space-x-3 mt-6">
+        <a href="{% url 'lista_niveles' %}" class="inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          Cancelar
+        </a>
+        <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+          Guardar Nivel
+        </button>
+      </div>
     </form>
+  </div>
 </div>
 {% endblock %}

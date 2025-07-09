@@ -1,8 +1,41 @@
 {% extends "layout/base_estudiantes.html" %}
 
 {% block title %}Panel del Estudiante{% endblock %}
-
+{% extends 'base.html' %}
 {% block content %}
-<h2>Bienvenido, Estudiante</h2>
-<p>Desde aquí puedes gestionar notas, desempeño</p>
+<div class="container mx-auto mt-8 p-6 bg-white rounded-lg shadow">
+  <h1 class="text-3xl font-bold text-center mb-6">Panel del Estudiante</h1>
+
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold">Bienvenido {{ estudiante.persona.primer_nombre }} {{ estudiante.persona.primer_apellido }}</h2>
+    <p>Documento: {{ estudiante.persona.tipo_documento }} {{ estudiante.persona.numero_documento }}</p>
+  </div>
+
+  <h3 class="text-lg font-semibold mb-2">📚 Calificaciones</h3>
+  <table class="w-full table-auto border border-gray-300">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="px-4 py-2 border">Asignatura</th>
+        <th class="px-4 py-2 border">Actividad</th>
+        <th class="px-4 py-2 border">Nota</th>
+        <th class="px-4 py-2 border">Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for calificacion in calificaciones %}
+      <tr>
+        <td class="border px-4 py-2">{{ calificacion.actividad.asignacion.asignatura.nombre }}</td>
+        <td class="border px-4 py-2">{{ calificacion.actividad.titulo }}</td>
+        <td class="border px-4 py-2">{{ calificacion.nota }}</td>
+        <td class="border px-4 py-2">{{ calificacion.fecha_registro }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center py-4">No hay calificaciones registradas.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}
+

@@ -1,0 +1,47 @@
+{# lista_niveles.html #}
+{% extends "layout/base_coordinador.html" %}
+{% block title %}Lista de Niveles Educativo{% endblock %} {# Changed title for clarity #}
+{% block content %}
+<div class="bg-white p-6 rounded-xl shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-blue-800 flex items-center gap-2">📘 Lista de Niveles Educativos</h2> {# Changed title for clarity #}
+        <a href="{% url 'nuevo_nivel' %}"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition">
+            ➕ Nuevo Nivel Educativo
+        </a>
+    </div>
+
+    {# Fix: The original code had {% if nivel.nombre == "Educativo" %}. It should iterate over 'niveles' #}
+    {% if niveles %}
+    <table class="w-full table-auto bg-white rounded-lg shadow">
+        <thead class="bg-gray-100 text-left text-gray-700 text-sm uppercase tracking-wider">
+            <tr>
+                <th class="px-6 py-3">Nombre</th>
+                <th class="px-6 py-3">Descripción</th> {# New column header #}
+                <th class="px-6 py-3">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for nivel_obj in niveles %} {# Renamed loop variable to avoid conflict with 'nivel' instance in views #}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="px-6 py-3">{{ nivel_obj.nombre }}</td>
+                <td class="px-6 py-3">{{ nivel_obj.descripcion|default:"N/A" }}</td> {# Display description, or N/A if empty #}
+                <td class="px-6 py-3 space-x-2">
+                    <a href="{% url 'editar_nivel' nivel_obj.id %}" class="text-blue-600 hover:underline">Editar</a>
+
+                    <a href="{% url 'eliminar_nivel' nivel_obj.id %}"
+                        class="text-red-600 hover:underline"
+                        onclick="return confirm('¿Estás seguro de eliminar este nivel?')">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center py-12 text-gray-500">
+        <p class="text-xl">😕 No hay Niveles Educativos registrados aún.</p> {# Changed text for clarity #}
+        <p class="text-sm mt-2">Haz clic en <strong>➕ Nuevo Nivel Educativo</strong> para agregar uno.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

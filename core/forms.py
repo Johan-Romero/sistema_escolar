@@ -60,25 +60,61 @@ class PersonaForm(forms.ModelForm):
             'direccion_linea1', 'direccion_linea2', 'ciudad'
         ]
         widgets = {
-            'direccion_linea2': forms.TextInput(attrs={'placeholder': 'Opcional'}),
-            'fecha_nacimiento': forms.DateInput(attrs={'type': 'date'}),
-            'sexo': forms.Select(choices=Persona.SEXO_CHOICES),
+            'direccion_linea2': forms.TextInput(attrs={'placeholder': 'Opcional', 'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
+            'fecha_nacimiento': forms.DateInput(attrs={'type': 'date', 'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
+            'sexo': forms.Select(choices=Persona.SEXO_CHOICES, attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
+            'primer_nombre': forms.TextInput(attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
+            'segundo_nombre': forms.TextInput(attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
+            'primer_apellido': forms.TextInput(attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
+            'segundo_apellido': forms.TextInput(attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
+            'tipo_documento': forms.Select(attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
+            'numero_documento': forms.TextInput(attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
+            'telefono': forms.TextInput(attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
+            'correo_personal': forms.EmailInput(attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
+            'direccion_linea1': forms.TextInput(attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
+            'ciudad': forms.Select(attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2'}),
         }
+
 
 class AreaForm(forms.ModelForm):
     class Meta:
         model = Area
-        fields = ['nombre', 'obligatoria']
-
-class NivelEducativoForm(forms.ModelForm):
-    class Meta:
-        model = NivelEducativo
-        fields = ['nombre']
+        fields = ['nombre', 'obligatoria'] # Specify the fields you want in the form
         widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej. Primaria'}),
+            'nombre': forms.TextInput(attrs={'placeholder': 'Ej: Matemáticas', 'class': 'form-control'}),
+            # 'obligatoria' is likely a CheckboxInput, default rendering is usually fine,
+            # but you can customize if needed.
         }
 
 
+       
+class NivelEducativoForm(forms.ModelForm):
+    class Meta:
+        model = NivelEducativo
+        fields = ['nombre', 'descripcion'] # Added 'descripcion'
+        widgets = {
+            'nombre': forms.TextInput(attrs={
+                'class': 'block w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-purple-500 focus:border-purple-500',
+                'placeholder': 'Ej. Primaria, Secundaria, Preescolar',
+                'required': 'required'
+            }),
+            'descripcion': forms.Textarea(attrs={ # New widget for descripcion
+                'class': 'block w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-purple-500 focus:border-purple-500',
+                'placeholder': 'Breve descripción del nivel educativo (opcional)',
+                'rows': 3 # Adjust rows as needed
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field_name == 'nombre':
+                field.label = 'Nombre del Nivel Educativo'
+            elif field_name == 'descripcion': # Set label for descripcion
+                field.label = 'Descripción'
+            field.widget.attrs.update({
+                'class': field.widget.attrs.get('class', '') + ' mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md'
+            })
 class GradoForm(forms.ModelForm):
     class Meta:
         model = Grado
@@ -159,3 +195,19 @@ class ExperienciaLaboralForm(forms.ModelForm):
     class Meta:
         model = ExperienciaLaboral
         exclude = ['docente']
+
+class UsuarioUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = ['correo', 'rol'] # Asegúrate de que 'nombre_de_usuario' exista en tu modelo Usuario si lo usas
+        widgets = {
+            'correo': forms.EmailInput(attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2', 'readonly': 'readonly'}),
+            'rol': forms.Select(attrs={'class': 'block w-full border border-gray-300 rounded-md px-4 py-2', 'readonly': 'readonly'}), # Generalmente el rol no se edita aquí
+        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Hace que los campos sean de solo lectura si no quieres que se editen
+        # if 'correo' in self.fields:
+        #     self.fields['correo'].widget.attrs['readonly'] = 'readonly'
+        # if 'rol' in self.fields:
+        #     self.fields['rol'].widget.attrs['disabled'] = 'disabled' # disabled también evita que el valor sea enviado en POST

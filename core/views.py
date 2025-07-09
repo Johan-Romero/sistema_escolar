@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponse
 from .decoradores import rol_requerido
 from django.contrib import messages
-from .models import Estudiante, Calificacion, Actividad
+from .forms import UsuarioUpdateForm
+
 
 def registro_usuario(request):
     if request.method == 'POST':
@@ -73,7 +74,7 @@ def login_usuario(request):
 @rol_requerido('Coordinador')
 def lista_areas(request):
     areas = Area.objects.all()
-    return render(request, 'coordinador/areas/areas_list.html', {'areas': areas})
+    return render(request, 'coordinador/areas/lista_areas.html', {'areas': areas})
 
 
 @rol_requerido('Coordinador')
@@ -89,7 +90,7 @@ def nueva_area(request):
 
 @rol_requerido('Coordinador')
 def editar_area(request, area_id):
-    area = get_object_or_404(Area, id=area_id)
+    area = get_object_or_404(Area, id=area.id)
     if request.method == 'POST':
         form = AreaForm(request.POST, instance=area)
         if form.is_valid():
@@ -99,6 +100,19 @@ def editar_area(request, area_id):
         form = AreaForm(instance=area)
     return render(request, 'coordinador/areas/area_form.html', {'form': form,'modo': 'Editar'})
 
+
+
+def eliminar_area(request, area_id):
+    area = get_object_or_404(Area, id=area_id) # Obtiene el objeto Área Académica o un 404 si no existe
+
+    if request.method == 'POST':
+        area.delete() # Elimina el objeto del base de datos
+        return redirect('lista_areas') # Redirige a la vista de lista_areas
+
+    # Si la petición no es POST (por ejemplo, es GET), se podría renderizar una página de confirmación
+    # En este ejemplo simple, asumimos que el POST viene de un formulario de confirmación o un botón
+    # que envía un POST directamente. Para una mejor UX, deberías tener una plantilla de confirmación.
+    return render(request, 'confirmar_eliminar_area.html', {'area': area}) # O redirigir a lista_areas si no quieres una confirmación explícita
 #Cerrar seccion
 
 def logout_view(request):
@@ -110,7 +124,7 @@ def logout_view(request):
 @rol_requerido('Coordinador')
 def lista_niveles(request):
     niveles = NivelEducativo.objects.all()
-    return render(request, 'coordinador/niveles/niveles_list.html', {'niveles': niveles})
+    return render(request, 'coordinador/niveles/lista_niveles.html', {'niveles': niveles})
 
 @rol_requerido('Coordinador')
 def nuevo_nivel(request):
@@ -140,6 +154,7 @@ def eliminar_nivel(request, nivel_id):
     nivel = get_object_or_404(NivelEducativo, id=nivel_id)
     nivel.delete()
     return redirect('lista_niveles')
+
 
 #Grado
 
@@ -474,3 +489,37 @@ def activar_usuario(request, usuario_id):
     usuario.save()
     return redirect('validar_usuarios')
 
+
+
+@login_required
+def ver_perfil(request):
+    # Esta vista simplemente renderiza la plantilla. Los datos vienen de request.user en la plantilla.
+    return render(request, 'usuarios/perfil.html')
+
+@login_required
+def editar_perfil(request):
+    persona = request.user.persona  # Obtiene la instancia de Persona asociada al usuario
+    usuario = request.user          # Obtiene la instancia del Usuario actual
+
+    if request.method == 'POST': #
+        # Instancia los formularios con los datos POST y las instancias existentes
+        form_persona = PersonaForm(request.POST, instance=persona) #
+        form_usuario = UsuarioUpdateForm(request.POST, instance=usuario) #
+
+        if form_persona.is_valid() and form_usuario.is_valid(): #
+            form_persona.save() # Guarda los cambios en la instancia de Persona
+            form_usuario.save() # Guarda los cambios en la instancia de Usuario
+            messages.success(request, 'Perfil actualizado correctamente.') #
+            return redirect('ver_perfil') # Redirige a la vista de perfil después de guardar
+        else:
+            messages.error(request, 'Hubo un error al actualizar el perfil. Por favor, revisa los datos.') #
+    else:
+        # Si es una petición GET, instancia los formularios con los datos existentes
+        form_persona = PersonaForm(instance=persona) #
+        form_usuario = UsuarioUpdateForm(instance=usuario) #
+
+    context = {
+        'form_persona': form_persona, # Pasa el formulario de Persona al contexto
+        'form_usuario': form_usuario, # Pasa el formulario de Usuario al contexto
+    }
+    return render(request, 'usuarios/editar_perfil.html', context) #
